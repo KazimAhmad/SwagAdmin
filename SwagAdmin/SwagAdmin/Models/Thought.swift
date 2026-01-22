@@ -32,4 +32,9 @@ struct Thought: Codable {
         let newThoughIdObj: NewThoughtId = try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
         return newThoughIdObj.id
     }
+    
+    func delete() async throws {
+        let thoughtsEndpoint = ThoughtEndpoint.delete([self.id])
+        return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
+    }
 }

@@ -64,7 +64,7 @@ struct HomeView: View {
                     .listRowBackground(Color.clear)
                     .swipeActions {
                         Button {
-                            print("Delete")
+                            viewModel.showAlertToDelete(thought: thought)
                         } label: {
                             Image(systemName: "trash.circle.fill")
                                 .padding()
@@ -74,8 +74,17 @@ struct HomeView: View {
                         .tint(.clear)
                     }
                 }
+                if viewModel.hasMoreThoughts() {
+                    LoadingView()
+                        .onAppear {
+                            viewModel.getThoughts()
+                        }
+                }
             }
             .listStyle(.plain)
+            .refreshable {
+                viewModel.refresh()
+            }
             Spacer()
         }
     }

@@ -80,6 +80,9 @@ struct AppTabView: View {
                     .sheet(item: $homeCoordinator.activeModal) { modal in
                         homeCoordinator.modalView(for: modal)
                     }
+                    .fullScreenCover(item: $homeCoordinator.activeFullScreenModal) { modal in
+                        homeCoordinator.fullScreenModalView(for: modal)
+                    }
             }
             .tag(AppTab.home)
         case .videos:

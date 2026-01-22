@@ -20,26 +20,30 @@ struct LoadingView: View {
                               in: .common).autoconnect()
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.accentColor)
-                .frame(width: isAnimated ? 200 : 60, height: 60)
-                .shadow(color: .primary.opacity(0.6),
-                        radius: 16)
-            ProgressView()
-                .tint(.white)
-                .offset(x: isAnimated ? (offset == .left ? -50 : (offset == .right ? 50 : 0)) : 0)
-                .onReceive(timer) { time in
-                    withAnimation {
-                        isAnimated.toggle()
-                            if let newOffset = LoadingOffset.allCases.randomElement() {
-                                offset = newOffset
-                            } else {
-                                offset = .center
-                            }
+            HStack {
+                Spacer()
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.accentColor)
+                        .frame(width: isAnimated ? 200 : 60, height: 60)
+                        .shadow(color: .primary.opacity(0.6),
+                                radius: 16)
+                    ProgressView()
+                        .tint(.white)
+                        .offset(x: isAnimated ? (offset == .left ? -50 : (offset == .right ? 50 : 0)) : 0)
+                }
+                Spacer()
+            }
+            .onReceive(timer) { time in
+                withAnimation {
+                    isAnimated.toggle()
+                    if let newOffset = LoadingOffset.allCases.randomElement() {
+                        offset = newOffset
+                    } else {
+                        offset = .center
                     }
                 }
-        }
+            }
     }
 }
 

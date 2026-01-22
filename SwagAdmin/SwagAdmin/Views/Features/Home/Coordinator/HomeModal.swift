@@ -9,10 +9,22 @@ import Foundation
 
 enum HomeModal: Identifiable {
     case newThought(((Thought) -> Void)?)
+    
     var id: String {
         switch self {
         case .newThought:
             return "newThought"
+        }
+    }
+}
+
+enum FullScreenModal: Identifiable {
+    case alert(AlertConfig)
+    
+    var id: String {
+        switch self {
+        case .alert:
+            return "alert"
         }
     }
 }

@@ -7,10 +7,12 @@
 
 import Foundation
 
+@MainActor
 class NewThoughtViewModel: ObservableObject {
     @Published var thought: String = ""
     @Published var more: String = ""
-
+    @Published var viewState: ViewState = .info
+    
     var coordinator: HomeCoordinator
     var didPublish: ((Thought) -> Void)?
     
@@ -25,17 +27,28 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func publishThought() {
-        finsihPublish()
+        viewState = .loading
+        Task {
+            do {
+                let newID = try await Thought.create(title: thought, more: more)
+                finsihPublish(id: newID)
+            } catch {
+                print(error)
+            }
+        }
     }
     
-    func finsihPublish() {
-        //TODO: - add id from API
-        let thought = Thought(id: Int.random(in: 1..<500), thought: self.thought, more: self.more, date: Date())
+    func finsihPublish(id: Int) {
+        let thought = Thought(id: Int.random(in: 1..<500),
+                              thought: self.thought,
+                              more: self.more.isEmpty ? "" : self.more,
+                              date: Date())
         self.didPublish?(thought)
         dismiss()
     }
     
     func saveDraft() {
+        viewState = .loading
         dismiss()
     }
 }

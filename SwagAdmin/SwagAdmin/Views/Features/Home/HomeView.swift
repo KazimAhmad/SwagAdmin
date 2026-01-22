@@ -14,54 +14,68 @@ struct HomeView: View {
     }
     
     var body: some View {
-        thoughtList()
+        VStack {
+            switch viewModel.viewState {
+            case .loading:
+                LoadingView()
+            case .error(let error):
+                AlertView()
+            case .empty:
+                ThoughtView(thought: Thought(id: 0,
+                                             thought: "",
+                                             more: "",
+                                             date: Date()), seeMore: {})
+            case .info:
+                thoughtList()
+            }
+        }
+        .task {
+            viewModel.getThoughts()
+        }
+        .navigationTitle("Thoughts")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.goToNewThought()
+                } label: {
+                    Image(systemName: "plus")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                        .foregroundStyle(Color.white)
+                        .padding(8)
+                        .background(
+                            Circle()
+                                
+                        )
+                }
+            }
+        }
     }
     
     func thoughtList() -> some View {
         VStack {
-            Section {
-                List {
-                    ForEach(viewModel.thoughts, id: \.id) { thought in
-                        ThoughtView(thought: thought) {
-                            //TODO: -See More View
+            List {
+                ForEach(viewModel.thoughts, id: \.id) { thought in
+                    ThoughtView(thought: thought) {
+                        //TODO: -See More View
+                    }
+                    .listRowInsets(.init())
+                    .listRowBackground(Color.clear)
+                    .swipeActions {
+                        Button {
+                            print("Delete")
+                        } label: {
+                            Image(systemName: "trash.circle.fill")
+                                .padding()
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.white, .red)
                         }
-                        .listRowInsets(.init())
-                        .listRowBackground(Color.clear)
-                        .swipeActions {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "trash.circle.fill")
-                                    .padding()
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(.white, .red)
-                            }
-                            .tint(.clear)
-                        }
+                        .tint(.clear)
                     }
                 }
-                .listStyle(.plain)
-            } header: {
-                HStack {
-                    Text("Thoughts")
-                        .font(AppTypography.body(size: 32))
-                    Spacer()
-                    Button {
-                        viewModel.goToNewThought()
-                    } label: {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundStyle(Color.white)
-                            .padding()
-                            .background(
-                                Circle()
-                                    
-                            )
-                    }
-                }
-                .padding()
             }
+            .listStyle(.plain)
             Spacer()
         }
     }

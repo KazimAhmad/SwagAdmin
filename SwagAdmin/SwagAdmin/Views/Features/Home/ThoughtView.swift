@@ -22,7 +22,7 @@ struct ThoughtView: View {
                 Text(thoughtText())
                     .font(AppTypography.note(size: 16))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                if thought.more != nil {
+                if !thought.more.isEmpty {
                     Button {
                         seeMore()
                     } label: {

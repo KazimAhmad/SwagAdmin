@@ -39,7 +39,19 @@ struct NewThoughtView: View {
                     .font(AppTypography.body(size: 16))
             }
             Spacer()
-            HStack(spacing: 16) {
+            buttonsView()
+        }
+        .padding(.horizontal)
+        .autocorrectionDisabled()
+        .textInputAutocapitalization(.sentences)
+        .textFieldStyle(RoundedShadowTextFieldStyle())
+    }
+    
+    func buttonsView() -> some View {
+        HStack(spacing: 16) {
+            if viewModel.viewState == .loading {
+                LoadingView()
+            } else {
                 Button {
                     viewModel.saveDraft()
                 } label: {
@@ -56,10 +68,6 @@ struct NewThoughtView: View {
                 .buttonStyle(RoundedBorderButtonStyle())
             }
         }
-        .padding(.horizontal)
-        .autocorrectionDisabled()
-        .textInputAutocapitalization(.sentences)
-        .textFieldStyle(RoundedShadowTextFieldStyle())
     }
 }
 

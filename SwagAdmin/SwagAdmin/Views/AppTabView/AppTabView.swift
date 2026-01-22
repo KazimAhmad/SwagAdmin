@@ -49,6 +49,11 @@ struct AppTabView: View {
     @State private var selectedTab: AppTab = .home
     @StateObject var homeCoordinator = HomeCoordinator()
 
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Pompiere-Regular", size: 32)!]
+        UINavigationBar.appearance().titleTextAttributes = [.font: UIFont(name: "Pompiere-Regular", size: 24)!]
+    }
+
     var body: some View {
         TabView(selection: $selectedTab) {
             ForEach(AppTab.allCases, id: \.rawValue) { tab in

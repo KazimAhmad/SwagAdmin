@@ -90,10 +90,8 @@ extension SwiftServicesProtocol {
             throw SSError.undefined
         }
         
-#if DEV
         print("[Response] \(response)")
         print("[Response Body] \(String(data: data, encoding: .utf8) ?? "(empty)")")
-#endif
 
         guard let httpResponse = response as? HTTPURLResponse else { throw URLError(.badServerResponse) }
         

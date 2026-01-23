@@ -17,7 +17,7 @@ enum AppTypography {
 
 extension AppTypography {
     static func body(size: CGFloat) -> Font {
-        Font.custom("Pompiere-Regular",
+        Font.custom("ShadowsIntoLight",
                     size: size,
                     relativeTo: .title)
     }
@@ -25,7 +25,7 @@ extension AppTypography {
 
 extension AppTypography {
     static func note(size: CGFloat) -> Font {
-        Font.custom("ShadowsIntoLight",
+        Font.custom("Pompiere-Regular",
                     size: size,
                     relativeTo: .title)
     }

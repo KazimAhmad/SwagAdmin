@@ -39,7 +39,7 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func finsihPublish(id: Int) {
-        let thought = Thought(id: Int.random(in: 1..<500),
+        let thought = Thought(id: id,
                               thought: self.thought,
                               more: self.more.isEmpty ? "" : self.more,
                               date: Date())

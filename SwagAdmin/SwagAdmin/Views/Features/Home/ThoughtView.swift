@@ -38,7 +38,7 @@ struct ThoughtView: View {
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color(uiColor: .systemBackground))
-                .shadow(color: Color.primary, radius: 8, y: 8)
+                .shadow(color: Color.primary.opacity(0.4), radius: 8, y: 8)
         )
         .padding()
         .overlay {

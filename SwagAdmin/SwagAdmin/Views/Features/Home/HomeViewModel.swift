@@ -68,6 +68,15 @@ extension HomeViewModel {
         }))
     }
     
+    func seeMore(of thought: Thought) {
+        coordinator?.show(.seeMore(SeeMoreConfig(type: .thought,
+                                                 title: thought.thought,
+                                                 description: thought.more,
+                                                 dismiss: { [weak self] in
+            self?.coordinator?.dismissFullScreenModal()
+        })))
+    }
+    
     func showAlertToDelete(thought: Thought) {
         coordinator?.show(.alert(AlertConfig(alertType: .delete,
                                              message: "Are you sure you want to delete this thought?",

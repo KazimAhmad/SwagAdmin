@@ -77,6 +77,9 @@ extension HomeCoordinator {
         case .alert(let config):
             AlertView(config: config)
                 .background(ClearBackgroundView())
+        case .seeMore(let config):
+            SeeMoreView(config: config)
+                .background(ClearBackgroundView())
         }
     }
 }

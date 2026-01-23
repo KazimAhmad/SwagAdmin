@@ -18,7 +18,7 @@ struct HomeView: View {
             switch viewModel.viewState {
             case .loading:
                 LoadingView()
-            case .error(let error):
+            case .error(_):
                 AlertView()
             case .empty:
                 ThoughtView(thought: Thought(id: 0,
@@ -58,7 +58,7 @@ struct HomeView: View {
             List {
                 ForEach(viewModel.thoughts, id: \.id) { thought in
                     ThoughtView(thought: thought) {
-                        //TODO: -See More View
+                        viewModel.seeMore(of: thought)
                     }
                     .listRowInsets(.init())
                     .listRowBackground(Color.clear)

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct FactView: View {
     let fact: FunFact
-    let edge: Edge = .trailing
-
+    var edge: Edge = .trailing
+    
     var body: some View {
         infoView()
     }

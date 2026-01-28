@@ -8,12 +8,27 @@
 import SwiftUI
 
 struct FunFactView: View {
-    let funFact: [String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    @StateObject var viewModel: FunFactViewModel
+    
+    init(viewModel: FunFactViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
-        VStack {
-            ScrollView(.vertical, showsIndicators: false) {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 20) {
                 headerView()
+                switch viewModel.viewState {
+                case .loading:
+                    LoadingView()
+                case .info:
+                    categoriesView()
+                    factsListView()
+                case .error(let error):
+                    AlertView(config: AlertConfig(message: error.localizedDescription))
+                case .empty:
+                    AlertView(config: AlertConfig(alertType: .empty))
+                }
             }
         }
     }
@@ -61,8 +76,46 @@ struct FunFactView: View {
                 }
         }
     }
+    
+    func categoriesView() -> some View {
+        Section {
+            ScrollView(.horizontal) {
+                ForEach(viewModel.categories, id: \.id) { category in
+                    Text(category.name)
+                        .font(AppTypography.body(size: 16))
+                        .padding()
+                        .background {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.purple)
+                        }
+                }
+            }
+        } header: {
+            HStack {
+                Text("Categories")
+                    .font(AppTypography.title(size: 16))
+                Spacer()
+                Button {
+                    //MARK: -TODO
+                } label: {
+                    Text("See All")
+                        .font(AppTypography.note(size: 16))
+                }
+            }
+        }
+        .padding([.horizontal])
+    }
+    
+    func factsListView() -> some View {
+        VStack {
+            ForEach(viewModel.funFact.indices, id: \.self) { factIndex in
+                let fact = viewModel.funFact[factIndex]
+                FactView(fact: fact, edge: factIndex % 2 == 0 ? .leading : .trailing)
+            }
+        }
+    }
 }
 
 #Preview {
-    FunFactView()
+    FunFactView(viewModel: FunFactViewModel())
 }

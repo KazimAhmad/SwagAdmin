@@ -5,19 +5,24 @@
 //  Created by Kazim Ahmad on 21/01/2026.
 //
 
+import CoreData
 import Foundation
 
 @MainActor
 class HomeViewModel: ObservableObject {
     private weak var coordinator: HomeCoordinator?
+    private let thoughtRepo: ThoughtRepositoryProtocol
+
     @Published var thoughts: [Thought] = []
     @Published var viewState: ViewState = .loading
     
     var total: Int = 0
     var page: Int = 0
     
-    init(coordinator: HomeCoordinator?) {
+    init(coordinator: HomeCoordinator?,
+         context: NSManagedObjectContext) {
         self.coordinator = coordinator
+        self.thoughtRepo = ThoughtRepository(coreData: ThoughtCoreData(context: context))
     }
     
     func hasMoreThoughts() -> Bool {
@@ -28,7 +33,7 @@ class HomeViewModel: ObservableObject {
         page += 1
         Task {
             do {
-                let thought = try await ThoughtObject.fetch(for: page)
+                let thought = try await thoughtRepo.fetch(for: page)
                 self.thoughts.append(contentsOf: thought.items)
                 self.total = thought.total
                 self.viewState = .info
@@ -49,7 +54,7 @@ class HomeViewModel: ObservableObject {
     func delete(thought: Thought) {
         Task {
             do {
-                try await thought.delete()
+                try await thoughtRepo.delete(for: [thought.id])
                 self.thoughts.removeAll { $0.id == thought.id }
                 thoughtDeleted()
             }

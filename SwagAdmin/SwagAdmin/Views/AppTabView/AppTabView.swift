@@ -48,6 +48,7 @@ enum AppTab: String, Hashable, CaseIterable {
 struct AppTabView: View {
     @State private var selectedTab: AppTab = .home
     @StateObject var homeCoordinator = HomeCoordinator()
+    let context = PersistenceController.shared.container.viewContext
 
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Pompiere-Regular", size: 32)!]
@@ -72,7 +73,8 @@ struct AppTabView: View {
         switch tab {
         case .home:
             NavigationStack(path: $homeCoordinator.path) {
-                let viewModel = HomeViewModel(coordinator: homeCoordinator)
+                let viewModel = HomeViewModel(coordinator: homeCoordinator,
+                                              context: context)
                 HomeView(viewModel: viewModel)
                     .navigationDestination(for: HomeRoute.self) { route in
                         homeCoordinator.destinationView(for: route)

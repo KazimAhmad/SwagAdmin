@@ -18,7 +18,7 @@ enum HomeModal: Identifiable {
     }
 }
 
-enum FullScreenModal: Identifiable {
+enum HomeFullScreenModal: Identifiable {
     case alert(AlertConfig)
     case seeMore(SeeMoreConfig)
     var id: String {

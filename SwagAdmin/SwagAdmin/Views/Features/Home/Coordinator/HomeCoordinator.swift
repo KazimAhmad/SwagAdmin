@@ -13,15 +13,17 @@ protocol HomeCoordinatorProtocol {
     func pop()
     func present(_ modal: HomeModal)
     func dismissModal()
-    func show(_ modal: FullScreenModal)
+    func show(_ modal: HomeFullScreenModal)
     func dismissFullScreenModal()
 }
 
 class HomeCoordinator: ObservableObject, HomeCoordinatorProtocol {
     @Published var path = NavigationPath()
     @Published var activeModal: HomeModal? = nil
-    @Published var activeFullScreenModal: FullScreenModal? = nil
+    @Published var activeFullScreenModal: HomeFullScreenModal? = nil
 
+    let thoughtRepository = ThoughtRepository(coreData: ThoughtCoreData(context: PersistenceController.shared.container.viewContext))
+    
     func navigate(to destination: HomeRoute) {
         path.append(destination)
     }
@@ -39,7 +41,7 @@ class HomeCoordinator: ObservableObject, HomeCoordinatorProtocol {
         activeModal = nil
     }
     
-    func show(_ modal: FullScreenModal) {
+    func show(_ modal: HomeFullScreenModal) {
         activeFullScreenModal = modal
     }
     
@@ -72,7 +74,7 @@ extension HomeCoordinator {
 
 extension HomeCoordinator {
     @MainActor @ViewBuilder
-    func fullScreenModalView(for modal: FullScreenModal) -> some View {
+    func fullScreenModalView(for modal: HomeFullScreenModal) -> some View {
         switch modal {
         case .alert(let config):
             AlertView(config: config)

@@ -34,10 +34,10 @@ final class ThoughtCoreData: ThoughtCoreDataProtocol {
     func createCD(thought: String, more: String) async throws {
         let newThought = CDThought(context: context)
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMddHHmmss"
+        formatter.dateFormat = "MMddHHmmss"
         let now = formatter.string(from: Date())
         let nowAsID = Int(now) ?? 0
-        newThought.id = Int16(nowAsID)
+        newThought.id = Int32(nowAsID)
         newThought.thought = thought
         newThought.more = more
         newThought.date = Date()

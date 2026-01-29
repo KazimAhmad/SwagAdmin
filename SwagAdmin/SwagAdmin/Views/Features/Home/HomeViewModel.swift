@@ -20,9 +20,9 @@ class HomeViewModel: ObservableObject {
     var page: Int = 0
     
     init(coordinator: HomeCoordinator?,
-         context: NSManagedObjectContext) {
+         thoughtRepo: ThoughtRepositoryProtocol) {
         self.coordinator = coordinator
-        self.thoughtRepo = ThoughtRepository(coreData: ThoughtCoreData(context: context))
+        self.thoughtRepo = thoughtRepo
     }
     
     func hasMoreThoughts() -> Bool {

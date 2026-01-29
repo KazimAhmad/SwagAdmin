@@ -91,5 +91,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(coordinator: HomeCoordinator()))
+    HomeView(viewModel: HomeViewModel(coordinator: HomeCoordinator(),
+                                      thoughtRepo: ThoughtRepository(coreData: ThoughtCoreData(context: PersistenceController.shared.container.viewContext))))
 }

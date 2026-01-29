@@ -27,10 +27,13 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func publishThought() {
+        if thought.isEmpty || more.isEmpty {
+            return
+        }
         viewState = .loading
         Task {
             do {
-                let newID = try await Thought.create(title: thought, more: more)
+                let newID = try await coordinator.thoughtRepository.create(thought: thought, more: more)
                 finsihPublish(id: newID)
             } catch {
                 print(error)
@@ -48,7 +51,18 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func saveDraft() {
+        if thought.isEmpty || more.isEmpty {
+            return
+        }
         viewState = .loading
-        dismiss()
+        Task {
+            do {
+                try await coordinator.thoughtRepository.createCD(thought: thought, more: more)
+                viewState = .info
+                dismiss()
+            } catch {
+                print(error)
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ extension Thought {
 
 extension CDThought {
     func update(from thought: Thought) {
-        self.id = Int16(thought.id)
+        self.id = Int32(thought.id)
         self.thought = thought.thought
         self.more = thought.more
         self.date = thought.date

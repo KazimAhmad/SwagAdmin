@@ -47,8 +47,7 @@ enum AppTab: String, Hashable, CaseIterable {
 
 struct AppTabView: View {
     @State private var selectedTab: AppTab = .home
-    @StateObject var homeCoordinator = HomeCoordinator()
-    let thoughtRepository = ThoughtRepository(coreData: ThoughtCoreData(context: PersistenceController.shared.container.viewContext))
+    var homeCoordinator = HomeCoordinator()
 
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Pompiere-Regular", size: 32)!]
@@ -72,21 +71,8 @@ struct AppTabView: View {
     func tabView(for tab: AppTab) -> some View {
         switch tab {
         case .home:
-            NavigationStack(path: $homeCoordinator.path) {
-                let viewModel = HomeViewModel(coordinator: homeCoordinator,
-                                              thoughtRepo: homeCoordinator.thoughtRepository)
-                HomeView(viewModel: viewModel)
-                    .navigationDestination(for: HomeRoute.self) { route in
-                        homeCoordinator.destinationView(for: route)
-                    }
-                    .sheet(item: $homeCoordinator.activeModal) { modal in
-                        homeCoordinator.modalView(for: modal)
-                    }
-                    .fullScreenCover(item: $homeCoordinator.activeFullScreenModal) { modal in
-                        homeCoordinator.fullScreenModalView(for: modal)
-                    }
-            }
-            .tag(AppTab.home)
+            homeCoordinator.coordinatorView
+                .tag(AppTab.home)
         case .videos:
             NavigationStack {
                 Text(tab.title)

@@ -23,7 +23,7 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func dismiss() {
-        coordinator.dismissModal()
+        coordinator.dismissSheet()
     }
     
     func publishThought() {

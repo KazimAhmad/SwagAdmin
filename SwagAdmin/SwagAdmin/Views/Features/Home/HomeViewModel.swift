@@ -68,45 +68,45 @@ class HomeViewModel: ObservableObject {
 //MARK: -Coordinator
 extension HomeViewModel {
     func goToNewThought() {
-        coordinator?.present(.newThought({ newThought in
+        coordinator?.present(sheet: .newThought({ newThought in
             self.thoughts.insert(newThought, at: 0)
         }))
     }
     
     func seeMore(of thought: Thought) {
-        coordinator?.show(.seeMore(SeeMoreConfig(type: .thought,
+        coordinator?.present(fullScreenCover: .seeMore(SeeMoreConfig(type: .thought,
                                                  title: thought.thought,
                                                  description: thought.more,
                                                  dismiss: { [weak self] in
-            self?.coordinator?.dismissFullScreenModal()
+            self?.coordinator?.dismissFullScreenCover()
         })))
     }
     
     func showAlertToDelete(thought: Thought) {
-        coordinator?.show(.alert(AlertConfig(alertType: .delete,
+        coordinator?.present(fullScreenCover: .alert(AlertConfig(alertType: .delete,
                                              message: "Are you sure you want to delete this thought?",
                                              buttons: AlertButtons(showCancel: true,
                                                                    onConfirm: { [weak self] in
             self?.delete(thought: thought)
-            self?.coordinator?.dismissFullScreenModal()
+            self?.coordinator?.dismissFullScreenCover()
         }, onCancel: { [weak self] in
-            self?.coordinator?.dismissFullScreenModal()
+            self?.coordinator?.dismissFullScreenCover()
         }))))
     }
     
     func thoughtDeleted() {
-        coordinator?.show(.alert(AlertConfig(alertType: .info,
+        coordinator?.present(fullScreenCover: .alert(AlertConfig(alertType: .info,
                                              message: "The thought has been successfully deleted.",
                                              buttons: AlertButtons(onConfirm: { [weak self] in
-            self?.coordinator?.dismissFullScreenModal()
+            self?.coordinator?.dismissFullScreenCover()
         }))))
     }
 
     func errorDeletingThought() {
-        coordinator?.show(.alert(AlertConfig(alertType: .error,
+        coordinator?.present(fullScreenCover: .alert(AlertConfig(alertType: .error,
                                              message: "Could not delete the thought. Please try again later.",
                                              buttons: AlertButtons(onConfirm: { [weak self] in
-            self?.coordinator?.dismissFullScreenModal()
+            self?.coordinator?.dismissFullScreenCover()
         }))))
     }
 }

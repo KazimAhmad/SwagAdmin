@@ -7,6 +7,22 @@
 
 import Foundation
 
+enum SettingsSection: String, CaseIterable {
+    case thoughts = "Thoughts"
+    case movies = "Movies"
+    case books = "Books"
+    case funfacts = "Fun Facts"
+}
 class SettingsViewModel: ObservableObject {
+    private weak var coordinator: HomeCoordinator?
     
+    var sections: [SettingsSection] = SettingsSection.allCases
+    
+    init(coordinator: HomeCoordinator? = nil) {
+        self.coordinator = coordinator
+    }
+    
+    func navigate(to viewOf: SettingsSection) {
+        
+    }
 }

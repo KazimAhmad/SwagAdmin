@@ -13,28 +13,31 @@ class NewThoughtViewModel: ObservableObject {
     @Published var more: String = ""
     @Published var viewState: ViewState = .info
     
-    var coordinator: HomeCoordinator
+    var dependency: ThoughtRepository?
+    var onDismiss: (() -> Void)?
     var didPublish: ((Thought) -> Void)?
     
-    init(coordinator: HomeCoordinator,
+    init(dependency: ThoughtRepository?,
+         onDismiss: (() -> Void)?,
          didPublish: ((Thought) -> Void)?) {
-        self.coordinator = coordinator
+        self.dependency = dependency
+        self.onDismiss = onDismiss
         self.didPublish = didPublish
     }
     
     func dismiss() {
-        coordinator.dismissSheet()
+        onDismiss?()
     }
     
     func publishThought() {
-        if thought.isEmpty || more.isEmpty {
+        if thought.isEmpty && more.isEmpty {
             return
         }
         viewState = .loading
         Task {
             do {
-                let newID = try await coordinator.thoughtRepository.create(thought: thought, more: more)
-                finsihPublish(id: newID)
+                let newID = try await dependency?.create(thought: thought, more: more)
+                finsihPublish(id: newID ?? 0)
             } catch {
                 print(error)
             }
@@ -51,13 +54,13 @@ class NewThoughtViewModel: ObservableObject {
     }
     
     func saveDraft() {
-        if thought.isEmpty || more.isEmpty {
+        if thought.isEmpty && more.isEmpty {
             return
         }
         viewState = .loading
         Task {
             do {
-                try await coordinator.thoughtRepository.createCD(thought: thought, more: more)
+                try await dependency?.createCD(thought: thought, more: more)
                 viewState = .info
                 dismiss()
             } catch {

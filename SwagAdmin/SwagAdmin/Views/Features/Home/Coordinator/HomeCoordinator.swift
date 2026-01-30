@@ -10,8 +10,8 @@ import SwiftUI
 
 class HomeCoordinator: CoordinatorProtocol {
     typealias Route = HomeRoute
-    typealias Sheet = HomeModal
-    typealias FullScreenCover = HomeFullScreenModal
+    typealias Sheet = HomeSheet
+    typealias FullScreenCover = HomeFullScreen
     
     @Published var path = NavigationPath()
     @Published var sheet: Sheet?
@@ -38,7 +38,8 @@ class HomeCoordinator: CoordinatorProtocol {
     func build(sheet: Sheet) -> some View {
         switch sheet {
         case .newThought(let callBack):
-            NewThoughtView(viewModel: NewThoughtViewModel(coordinator: self,
+            NewThoughtView(viewModel: NewThoughtViewModel(dependency: thoughtRepository,
+                                                          onDismiss: dismissSheet,
                                                           didPublish: callBack))
         }
     }

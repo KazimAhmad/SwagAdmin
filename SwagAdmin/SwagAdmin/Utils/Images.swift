@@ -8,7 +8,8 @@
 import Foundation
 
 enum Images {
-    //System images    
+    static let logo = "logo"
+    //System images
     //tabView
     static let home = "house.circle"
     static let recommendations = "popcorn.circle"
@@ -29,4 +30,5 @@ enum Images {
     static let book = "book.pages"
     
     static let link = "link"
+    static let disclose = "chevron.right"
 }

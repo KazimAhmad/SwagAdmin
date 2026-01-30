@@ -1,17 +1,18 @@
 //
-//  HomeRoute.swift
-//  Swag
+//  SettingsRoute.swift
+//  SwagAdmin
 //
-//  Created by Kazim Ahmad on 15/01/2026.
+//  Created by Kazim Ahmad on 30/01/2026.
 //
 
 import Foundation
 
-enum HomeRoute: Hashable {
-    case home
+enum SettingsRoute: String {
+    case settings
+    case thoughts
 }
 
-enum HomeSheet: Identifiable {
+enum SettingsSheet: Identifiable {
     case newThought(((Thought) -> Void)?)
     
     var id: String {
@@ -22,15 +23,12 @@ enum HomeSheet: Identifiable {
     }
 }
 
-enum HomeFullScreen: Identifiable {
+enum SettingsFullScreen: Identifiable {
     case alert(AlertConfig)
-    case seeMore(SeeMoreConfig)
     var id: String {
         switch self {
         case .alert:
             return "alert"
-        case .seeMore:
-            return "seeMore"
         }
     }
 }

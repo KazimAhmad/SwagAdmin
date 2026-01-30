@@ -72,6 +72,5 @@ struct NewThoughtView: View {
 }
 
 #Preview {
-    NewThoughtView(viewModel: NewThoughtViewModel(coordinator: HomeCoordinator(),
-                                                  didPublish: {_ in}))
+    NewThoughtView(viewModel: NewThoughtViewModel(dependency: nil, onDismiss: nil, didPublish: nil))
 }

@@ -48,7 +48,8 @@ enum AppTab: String, Hashable, CaseIterable {
 struct AppTabView: View {
     @State private var selectedTab: AppTab = .home
     var homeCoordinator = HomeCoordinator()
-
+    var settingsCoordinator = SettingsCoordinator()
+    
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Pompiere-Regular", size: 32)!]
         UINavigationBar.appearance().titleTextAttributes = [.font: UIFont(name: "Pompiere-Regular", size: 24)!]
@@ -89,10 +90,8 @@ struct AppTabView: View {
             }
             .tag(AppTab.funFacts)
         case .settings:
-            NavigationStack {
-                Text(tab.title)
-            }
-            .tag(AppTab.settings)
+            settingsCoordinator.coordinatorView
+                .tag(AppTab.settings)
         }
     }
 }

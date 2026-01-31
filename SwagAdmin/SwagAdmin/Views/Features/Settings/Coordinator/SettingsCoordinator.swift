@@ -29,18 +29,22 @@ class SettingsCoordinator: CoordinatorProtocol {
     func build(page: Route) -> some View {
         switch page {
         case .settings:
-            SettingsView(viewModel: SettingsViewModel())
-        case .thoughts:
-            Text("thoughts")
+            SettingsView(viewModel: SettingsViewModel(coordinator: self))
+        case .draft(let section):
+            DraftsView(viewModel: DraftsViewModel(section: section,
+                                                  coordinator: self,
+                                                  thoughtRepo: thoughtRepository))
         }
     }
     
     func build(sheet: Sheet) -> some View {
         switch sheet {
-        case .newThought(let callBack):
+        case .newThought(let existingThought, let callBackPublish, let callBackDrafts):
             NewThoughtView(viewModel: NewThoughtViewModel(dependency: thoughtRepository,
                                                           onDismiss: dismissSheet,
-                                                          didPublish: callBack))
+                                                          didPublish: callBackPublish,
+                                                          didSaveDraft: callBackDrafts,
+                                                          existingThought: existingThought))
         }
     }
     

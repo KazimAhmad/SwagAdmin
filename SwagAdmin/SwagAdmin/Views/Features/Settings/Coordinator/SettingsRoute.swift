@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum SettingsRoute: String {
+enum SettingsRoute: Hashable {
     case settings
-    case thoughts
+    case draft(SettingsSection)
 }
 
 enum SettingsSheet: Identifiable {
-    case newThought(((Thought) -> Void)?)
+    case newThought(Thought, ((Thought) -> Void)?, ((Thought) -> Void)?)
     
     var id: String {
         switch self {

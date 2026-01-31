@@ -16,13 +16,21 @@ class NewThoughtViewModel: ObservableObject {
     var dependency: ThoughtRepository?
     var onDismiss: (() -> Void)?
     var didPublish: ((Thought) -> Void)?
-    
+    var didSaveDraft: ((Thought) -> Void)? = nil
+
     init(dependency: ThoughtRepository?,
          onDismiss: (() -> Void)?,
-         didPublish: ((Thought) -> Void)?) {
+         didPublish: ((Thought) -> Void)?,
+         didSaveDraft: ((Thought) -> Void)? = nil,
+         existingThought: Thought? = nil) {
         self.dependency = dependency
         self.onDismiss = onDismiss
         self.didPublish = didPublish
+        self.didSaveDraft = didSaveDraft
+        if let existingThought = existingThought {
+            self.thought = existingThought.thought
+            self.more = existingThought.more
+        }
     }
     
     func dismiss() {
@@ -40,6 +48,7 @@ class NewThoughtViewModel: ObservableObject {
                 finsihPublish(id: newID ?? 0)
             } catch {
                 print(error)
+                viewState = .info
             }
         }
     }
@@ -53,6 +62,15 @@ class NewThoughtViewModel: ObservableObject {
         dismiss()
     }
     
+    func finsihDrafts(id: Int) {
+        let thought = Thought(id: id,
+                              thought: self.thought,
+                              more: self.more.isEmpty ? "" : self.more,
+                              date: Date())
+        self.didSaveDraft?(thought)
+        dismiss()
+    }
+    
     func saveDraft() {
         if thought.isEmpty && more.isEmpty {
             return
@@ -60,11 +78,13 @@ class NewThoughtViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
-                try await dependency?.createCD(thought: thought, more: more)
+                let newID = try await dependency?.createCD(thought: thought, more: more)
                 viewState = .info
+                finsihDrafts(id: newID ?? 0)
                 dismiss()
             } catch {
                 print(error)
+                viewState = .info
             }
         }
     }

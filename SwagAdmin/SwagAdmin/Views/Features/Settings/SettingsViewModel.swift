@@ -14,15 +14,16 @@ enum SettingsSection: String, CaseIterable {
     case funfacts = "Fun Facts"
 }
 class SettingsViewModel: ObservableObject {
-    private weak var coordinator: HomeCoordinator?
+    private weak var coordinator: SettingsCoordinator?
     
     var sections: [SettingsSection] = SettingsSection.allCases
     
-    init(coordinator: HomeCoordinator? = nil) {
+    init(coordinator: SettingsCoordinator? = nil) {
         self.coordinator = coordinator
     }
     
     func navigate(to viewOf: SettingsSection) {
-        
+        let draftRoute = SettingsRoute.draft(viewOf)
+        coordinator?.push(draftRoute)
     }
 }

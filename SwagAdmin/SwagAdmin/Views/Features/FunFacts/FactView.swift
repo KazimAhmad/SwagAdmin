@@ -21,7 +21,7 @@ struct FactView: View {
             Image(systemName: Images.quote)
             Text(fact.title)
                 .font(AppTypography.body(size: 18))
-            Text(fact.more)
+            Text(fact.description)
                 .font(AppTypography.note(size: 18))
             HStack {
                 if edge == .leading {
@@ -72,7 +72,7 @@ struct FactView: View {
 #Preview {
     FactView(fact: FunFact(id: 1,
                            title: "A teaspoon of neutron star material weighs over 6 ds d billion tons",
-                           more: "or that sharks existed before trees. Other examples include that dolphins have names for each other, and that the Eiffel Tower can be 15 cm taller during the summer due to thermal expansion. ",
+                           description: "or that sharks existed before trees. Other examples include that dolphins have names for each other, and that the Eiffel Tower can be 15 cm taller during the summer due to thermal expansion. ",
                            category: FunFactCategory(id: 1,
                                                      name: "Animals"),
                            link: "https://did-you-knows.com"))

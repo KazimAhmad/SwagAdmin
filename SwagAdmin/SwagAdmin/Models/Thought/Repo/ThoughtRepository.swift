@@ -88,10 +88,7 @@ final class ThoughtRepository: ThoughtRepositoryProtocol {
     
     func create(thought: String, more: String) async throws -> Int {
         let thoughtsEndpoint = ThoughtEndpoint.add(thought, more)
-        struct NewThoughtId: Codable {
-            let id: Int
-        }
-        let newThoughIdObj: NewThoughtId = try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
+        let newThoughIdObj: NewObjectId = try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
         return newThoughIdObj.id
     }
     

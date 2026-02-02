@@ -18,17 +18,31 @@ struct FunFactView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 20) {
                 headerView()
+                categoriesView()
+                HStack {
+                    Spacer()
+                    Button {
+                        viewModel.addNewFact()
+                    } label: {
+                        Image(systemName: Images.plus)
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .padding(.horizontal)
+                    }
+                }
                 switch viewModel.viewState {
                 case .loading:
                     LoadingView()
                 case .info:
-                    categoriesView()
                     factsListView()
                 case .error(let error):
                     AlertView(config: AlertConfig(message: error.localizedDescription))
                 case .empty:
                     AlertView(config: AlertConfig(alertType: .empty))
                 }
+            }
+            .task {
+                viewModel.getInitialData()
             }
         }
     }
@@ -80,14 +94,16 @@ struct FunFactView: View {
     func categoriesView() -> some View {
         Section {
             ScrollView(.horizontal) {
-                ForEach(viewModel.categories, id: \.id) { category in
-                    Text(category.name)
-                        .font(AppTypography.body(size: 16))
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.purple)
-                        }
+                HStack {
+                    ForEach(viewModel.categories, id: \.id) { category in
+                        Text(category.name)
+                            .font(AppTypography.body(size: 16))
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(viewModel.isSelectedCategory(category) ? Color.accentColor : Color.purple)
+                            }
+                    }
                 }
             }
         } header: {
@@ -96,7 +112,7 @@ struct FunFactView: View {
                     .font(AppTypography.title(size: 16))
                 Spacer()
                 Button {
-                    //MARK: -TODO
+                    viewModel.seeAllCategories()
                 } label: {
                     Text("See All")
                         .font(AppTypography.note(size: 16))
@@ -108,8 +124,8 @@ struct FunFactView: View {
     
     func factsListView() -> some View {
         VStack {
-            ForEach(viewModel.funFact.indices, id: \.self) { factIndex in
-                let fact = viewModel.funFact[factIndex]
+            ForEach(viewModel.funFacts().indices, id: \.self) { factIndex in
+                let fact = viewModel.funFacts()[factIndex]
                 FactView(fact: fact, edge: factIndex % 2 == 0 ? .leading : .trailing)
             }
         }
@@ -117,5 +133,5 @@ struct FunFactView: View {
 }
 
 #Preview {
-    FunFactView(viewModel: FunFactViewModel())
+    FunFactView(viewModel: FunFactViewModel(coordinator: FactCoordinator()))
 }

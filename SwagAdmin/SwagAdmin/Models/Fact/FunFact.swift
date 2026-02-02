@@ -9,7 +9,7 @@ import Foundation
 
 struct FactObject: Decodable {
     let total: Int
-    let items: [FunFact]
+    var items: [FunFact]
 }
 
 struct FunFact: Codable {
@@ -34,7 +34,7 @@ extension FunFact {
     }
 }
 
-struct FunFactCategory: Codable {
+struct FunFactCategory: Codable, Hashable {
     let id: Int
     let name: String
 }

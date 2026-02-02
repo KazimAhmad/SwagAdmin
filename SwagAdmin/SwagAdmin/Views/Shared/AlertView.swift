@@ -80,7 +80,6 @@ struct AlertView: View {
     
     var body: some View {
         ZStack(alignment: .center) {
-            Color.black.opacity(0.8)
             VStack(spacing: 16) {
                 titleView()
                 if let buttons = config.buttons {

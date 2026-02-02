@@ -26,22 +26,26 @@ struct NewThoughtView: View {
                 Text("Thought")
                     .font(AppTypography.body(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                 TextField("Title or a heading...",
                           text: $viewModel.thought,
                           axis: .vertical)
                     .font(AppTypography.body(size: 16))
+                    .padding(.horizontal)
                 Text("More")
                     .font(AppTypography.body(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                 TextField("More...",
                           text: $viewModel.more,
                           axis: .vertical)
                     .font(AppTypography.body(size: 16))
+                    .padding(.horizontal)
             }
             Spacer()
             buttonsView()
+                .padding(.horizontal)
         }
-        .padding(.horizontal)
         .autocorrectionDisabled()
         .textInputAutocapitalization(.sentences)
         .textFieldStyle(RoundedShadowTextFieldStyle())
@@ -56,6 +60,7 @@ struct NewThoughtView: View {
                     viewModel.saveDraft()
                 } label: {
                     Text("Save Draft")
+                        .foregroundStyle(Color.accentColor)
                 }
                 .buttonStyle(RoundedBorderButtonStyle(backgroundColor: .clear,
                                                       borderColor: .accentColor))

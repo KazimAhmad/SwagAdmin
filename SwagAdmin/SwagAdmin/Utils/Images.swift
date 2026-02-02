@@ -31,4 +31,6 @@ enum Images {
     
     static let link = "link"
     static let disclose = "chevron.right"
+    
+    static let plus = "plus.circle.fill"
 }

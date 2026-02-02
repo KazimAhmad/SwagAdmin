@@ -12,7 +12,7 @@ enum FactRoute: Hashable {
 }
 
 enum FactSheet: Identifiable {
-    case new
+    case new([FunFactCategory], ((FunFact) -> Void)?)
     
     var id: Int {
         switch self {
@@ -24,11 +24,14 @@ enum FactSheet: Identifiable {
 
 enum FactFullScreenCover: Identifiable {
     case seeMore(SeeMoreConfig)
+    case categories(CategoriesConfig)
     
     var id: Int {
         switch self {
         case .seeMore:
             return 1
+            case .categories:
+            return 2
         }
     }
 }

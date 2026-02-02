@@ -16,7 +16,7 @@ struct ThoughtView: View {
             VStack(alignment: .leading) {
                 Image(systemName: Images.quote)
                     .resizable()
-                    .frame(width: 34, height: 32)
+                    .frame(width: 24, height: 22)
                     .foregroundColor(.purple)
                 .padding(.bottom)
                 Text(thoughtText())
@@ -29,10 +29,10 @@ struct ThoughtView: View {
                         Text("See More...")
                             .font(AppTypography.body(size: 14))
                     }
-                    .padding(.vertical)
+                    .padding(.top, 8)
                 }
             }
-            .padding(24)
+            .padding()
         }
         .padding()
         .background(

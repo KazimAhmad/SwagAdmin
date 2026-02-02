@@ -30,7 +30,9 @@ struct HomeView: View {
             }
         }
         .task {
-            viewModel.getThoughts()
+            if viewModel.thoughts.count == 0 {
+                viewModel.getThoughts()                
+            }
         }
         .navigationTitle("Thoughts")
         .navigationBarTitleDisplayMode(.inline)

@@ -42,7 +42,9 @@ struct FunFactView: View {
                 }
             }
             .task {
-                viewModel.getInitialData()
+                if viewModel.categories.count == 0 {
+                    viewModel.getInitialData()                    
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 //
 //  CategoriesView.swift
-//  SwagAdmin
+//  Swag
 //
 //  Created by Kazim Ahmad on 02/02/2026.
 //
@@ -12,73 +12,14 @@ struct CategoriesView: View {
     
     var body: some View {
         ZStack {
-            Color.gray.opacity(0.6)
             GeometryReader { geometry in
                 VStack {
                     Spacer()
-                    deleteCategory()
-                    addNewCategory()
                     categoriesView(height: geometry.size.height / 2)
                 }
             }
         }
         .ignoresSafeArea()
-    }
-    
-    func deleteCategory() -> some View {
-        HStack {
-            Menu {
-                ForEach(viewModel.categories, id: \.id) { category in
-                    Button(action: {
-                        viewModel.categoryToDelete = category
-                    }) {
-                        Text(category.name)
-                    }
-                }
-            } label: {
-                HStack {
-                    Text("Delete category:")
-                        .font(AppTypography.body(size: 18))
-                        .foregroundStyle(Color.white)
-                        .padding(8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                        )
-                    Text(viewModel.categoryToDelete?.name ?? "-- --")
-                        .font(AppTypography.body(size: 18))
-                        .padding(8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.white)
-                        )
-                    Spacer()
-                }
-            }
-            Button {
-                viewModel.deleteCategory()
-            } label: {
-                Image(systemName: Images.delete)
-                    .resizable()
-                    .frame(width: 35, height: 35)
-            }
-        }
-        .padding()
-    }
-    
-    func addNewCategory() -> some View {
-        HStack {
-            TextField("New Category...", text: $viewModel.newCategoryName)
-                .textFieldStyle(.roundedBorder)
-                .autocorrectionDisabled()
-            Button {
-                viewModel.addCategory()
-            } label: {
-                Image(systemName: Images.plus)
-                    .resizable()
-                    .frame(width: 35, height: 35)
-            }
-        }
-        .padding(.horizontal)
     }
     
     func categoriesView(height: CGFloat) -> some View {
@@ -136,6 +77,8 @@ struct CategoriesView: View {
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color(uiColor: .systemBackground))
+                .shadow(color: .primary,
+                        radius: 24)
         )
         .padding()
         .padding(.bottom)

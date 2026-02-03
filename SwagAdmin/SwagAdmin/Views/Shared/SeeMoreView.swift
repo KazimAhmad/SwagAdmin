@@ -1,6 +1,6 @@
 //
 //  SeeMoreView.swift
-//  SwagAdmin
+//  Swag
 //
 //  Created by Kazim Ahmad on 22/01/2026.
 //
@@ -73,9 +73,9 @@ struct SeeMoreView: View {
         
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                Color.black.opacity(0.8)
-                infoBox(height: geometry.size.height / 1.6)
+            VStack {
+                Spacer()
+                infoBox(height: geometry.size.height / 1.8)
             }
             .onReceive(timer) { time in
                 withAnimation {
@@ -96,9 +96,11 @@ struct SeeMoreView: View {
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color(uiColor: .systemBackground))
-                .shadow(color: Color.primary,
-                        radius: 16)
+                .shadow(color: .primary,
+                        radius: 24)
         )
+        .padding()
+        .padding(.bottom)
     }
     
     func imageView(size: SeeMoreImageSize) -> some View {

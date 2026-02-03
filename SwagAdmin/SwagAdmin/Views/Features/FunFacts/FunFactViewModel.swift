@@ -9,11 +9,11 @@ import Foundation
 
 @MainActor
 class FunFactViewModel: ObservableObject {
-    @Published var funFactObj: FactObject?
-    @Published var categories: [FunFactCategory] = []
+    @Published var funFactObj: ItemsObject<FunFact>?
+    @Published var categories: [Category] = []
     @Published var viewState: ViewState = .loading
     
-    @Published var selectedCategory: FunFactCategory?
+    @Published var selectedCategory: Category?
     
     var coordinator: FactCoordinator?
     var page: Int = 0
@@ -26,7 +26,7 @@ class FunFactViewModel: ObservableObject {
         return funFactObj?.items ?? []
     }
     
-    func isSelectedCategory(_ category: FunFactCategory) -> Bool {
+    func isSelectedCategory(_ category: Category) -> Bool {
         return selectedCategory?.id == category.id
     }
     
@@ -58,15 +58,13 @@ class FunFactViewModel: ObservableObject {
     }
     
     func seeAllCategories() {
-        let allCategories: [AppCategory] = categories.map { AppCategory(id: $0.id, name: $0.name) }
-        coordinator?.seeAllCategories(categories: allCategories,
-                                     selectedCategory: AppCategory(id: selectedCategory?.id ?? 0,
-                                                                   name: selectedCategory?.name ?? ""),
+        coordinator?.seeAllCategories(categories: categories,
+                                     selectedCategory: selectedCategory,
                                      didSelectCategory: { [weak self] cat in
             if let category = self?.categories.first(where: { $0.id == cat?.id }) {
                 self?.selectedCategory = category
             } else {
-                let newCategory: FunFactCategory = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
+                let newCategory: Category = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
                 self?.selectedCategory = newCategory
                 self?.categories.insert(newCategory, at: 0)
             }
@@ -81,7 +79,7 @@ class FunFactViewModel: ObservableObject {
             self?.funFactObj = nil
             self?.getFacts()
         }, didDeleteCategory: { [weak self] cat in
-            let catToDel: FunFactCategory = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
+            let catToDel: Category = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
             self?.categories.removeAll(where: { $0.id == catToDel.id })
         })
     }

@@ -11,18 +11,18 @@ import Foundation
 class NewFactViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var description: String = ""
-    @Published var category: FunFactCategory?
+    @Published var category: Category?
     @Published var link: String?
 
     @Published var viewState: ViewState = .info
-    var categories: [FunFactCategory] = []
+    var categories: [Category] = []
     
     var dependency: FactRepository?
     var onDismiss: (() -> Void)?
     var didPublish: ((FunFact) -> Void)?
     var didSaveDraft: ((FunFact) -> Void)? = nil
 
-    init(categories: [FunFactCategory],
+    init(categories: [Category],
          dependency: FactRepository?,
          onDismiss: (() -> Void)?,
          didPublish: ((FunFact) -> Void)?,

@@ -7,16 +7,11 @@
 
 import Foundation
 
-struct FactObject: Decodable {
-    var total: Int
-    var items: [FunFact]
-}
-
 struct FunFact: Codable {
     let id: Int
     let title: String
     let description: String
-    let category: FunFactCategory
+    let category: Category
     let link: String?
 }
 
@@ -31,17 +26,5 @@ extension FunFact {
         } else {
             self.category = .init(id: 0, name: "")
         }
-    }
-}
-
-struct FunFactCategory: Codable, Hashable {
-    let id: Int
-    let name: String
-}
-
-extension FunFactCategory {
-    init(from entity: CDFactCategory) throws {
-        self.id = Int(entity.id)
-        self.name = entity.name ?? ""
     }
 }

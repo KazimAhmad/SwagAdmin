@@ -15,11 +15,77 @@ struct CategoriesView: View {
             GeometryReader { geometry in
                 VStack {
                     Spacer()
+                    deleteCategory()
+                    addNewCategory()
                     categoriesView(height: geometry.size.height / 2)
                 }
             }
         }
         .ignoresSafeArea()
+    }
+    
+    func deleteCategory() -> some View {
+        HStack {
+            Menu {
+                ForEach(viewModel.categories, id: \.id) { category in
+                    Button(action: {
+                        viewModel.categoryToDelete = category
+                    }) {
+                        Text(category.name)
+                    }
+                }
+            } label: {
+                HStack {
+                    Text("Delete category:")
+                        .font(AppTypography.body(size: 18))
+                        .foregroundStyle(Color.white)
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                        )
+                    Text(viewModel.categoryToDelete?.name ?? "-- --")
+                        .font(AppTypography.body(size: 18))
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.white)
+                        )
+                    Spacer()
+                }
+            }
+            Button {
+                viewModel.deleteCategory()
+            } label: {
+                Image(systemName: Images.delete)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.primary)
+        )
+    }
+    
+    func addNewCategory() -> some View {
+        HStack {
+            TextField("New Category...", text: $viewModel.newCategoryName)
+                .textFieldStyle(.roundedBorder)
+                .autocorrectionDisabled()
+            Button {
+                viewModel.addCategory()
+            } label: {
+                Image(systemName: Images.plus)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.primary)
+        )
     }
     
     func categoriesView(height: CGFloat) -> some View {
@@ -31,23 +97,7 @@ struct CategoriesView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(AppTypography.title(size: 18))
                 .padding(.top)
-            ScrollView {
-                FlowLayout {
-                    ForEach(viewModel.categories) { cat in
-                        Text(cat.name)
-                            .font(AppTypography.note(size: 18))
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(viewModel.isSelected(cat) ? Color.accentColor : Color.darkPurple.opacity(0.6))
-                            )
-                            .padding(2)
-                            .onTapGesture {
-                                viewModel.selectCategory(cat)
-                            }
-                    }
-                }
-            }
+            categoriesGrid()
             HStack {
                 Button {
                     viewModel.didClearCategory?()
@@ -82,6 +132,26 @@ struct CategoriesView: View {
         )
         .padding()
         .padding(.bottom)
+    }
+    
+    func categoriesGrid() -> some View {
+        ScrollView {
+            FlowLayout {
+                ForEach(viewModel.categories, id: \.id) { cat in
+                    Text(cat.name)
+                        .font(AppTypography.note(size: 18))
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(viewModel.isSelected(cat) ? Color.accentColor : Color.darkPurple.opacity(0.6))
+                        )
+                        .padding(2)
+                        .onTapGesture {
+                            viewModel.selectCategory(cat)
+                        }
+                }
+            }
+        }
     }
 }
 

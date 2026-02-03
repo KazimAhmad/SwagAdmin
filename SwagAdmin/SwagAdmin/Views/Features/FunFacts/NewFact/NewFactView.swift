@@ -113,10 +113,10 @@ struct NewFactView: View {
 }
 
 #Preview {
-    NewFactView(viewModel: NewFactViewModel(categories: [FunFactCategory(id: 0,
-                                                                         name: "Animals"),
-                                                         FunFactCategory(id: 1,
-                                                                                                                              name: "Birds")],
+    NewFactView(viewModel: NewFactViewModel(categories: [Category(id: 0,
+                                                                  name: "Animals"),
+                                                         Category(id: 1,
+                                                                  name: "Birds")],
                                             dependency: nil,
                                             onDismiss: { },
                                             didPublish: { _ in }))

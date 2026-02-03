@@ -12,6 +12,20 @@
         <attribute name="name" attributeType="String"/>
         <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDFact" inverseName="category" inverseEntity="CDFact"/>
     </entity>
+    <entity name="CDMovie" representedClassName="CDMovie" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imdb_link" optional="YES" attributeType="String"/>
+        <attribute name="my_review" optional="YES" attributeType="String"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="release_year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDMovieCategory" inverseName="relationship" inverseEntity="CDMovieCategory"/>
+    </entity>
+    <entity name="CDMovieCategory" representedClassName="CDMovieCategory" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDMovie" inverseName="relationship" inverseEntity="CDMovie"/>
+    </entity>
     <entity name="CDThought" representedClassName="CDThought" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>

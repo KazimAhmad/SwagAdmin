@@ -12,7 +12,7 @@ enum FactRoute: Hashable {
 }
 
 enum FactSheet: Identifiable {
-    case new([FunFactCategory], ((FunFact) -> Void)?)
+    case new([Category], ((FunFact) -> Void)?)
     
     var id: Int {
         switch self {

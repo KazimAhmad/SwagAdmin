@@ -60,11 +60,11 @@ class FactCoordinator: CoordinatorProtocol {
 
 extension FactCoordinator {
     @MainActor
-    func seeAllCategories(categories: [AppCategory],
-                          selectedCategory: AppCategory?,
-                          didSelectCategory: ((AppCategory?) -> Void)?,
+    func seeAllCategories(categories: [Category],
+                          selectedCategory: Category?,
+                          didSelectCategory: ((Category?) -> Void)?,
                           didClearCategory: (() -> Void)?,
-                          didDeleteCategory: ((AppCategory?) -> Void)?) {
+                          didDeleteCategory: ((Category?) -> Void)?) {
         present(fullScreenCover: .categories(.init(categories: categories,
                                                    selectedCategory: selectedCategory,
                                                    categoryType: .facts,

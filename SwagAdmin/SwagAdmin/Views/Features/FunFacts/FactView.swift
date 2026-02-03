@@ -75,7 +75,7 @@ struct FactView: View {
     FactView(fact: FunFact(id: 1,
                            title: "A teaspoon of neutron star material weighs over 6 ds d billion tons",
                            description: "or that sharks existed before trees. Other examples include that dolphins have names for each other, and that the Eiffel Tower can be 15 cm taller during the summer due to thermal expansion. ",
-                           category: FunFactCategory(id: 1,
-                                                     name: "Animals"),
+                           category: Category(id: 1,
+                                              name: "Animals"),
                            link: "https://did-you-knows.com"))
 }

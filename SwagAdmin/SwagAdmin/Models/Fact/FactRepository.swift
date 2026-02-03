@@ -10,12 +10,12 @@ import CoreData
 import Foundation
 
 protocol FactRepositoryProtocol {
-    func fetch(for page: Int, categoryId: Int?) async throws -> FactObject
+    func fetch(for page: Int, categoryId: Int?) async throws -> ItemsObject<FunFact>
     func create(fact: FunFact) async throws -> Int
     func delete(for ids: [Int]) async throws
     func deleteCategories(for ids: [Int]) async throws
 
-    func fetchCategories() async throws -> [FunFactCategory]
+    func fetchCategories() async throws -> [Category]
     func createCategory(name: String) async throws -> Int
     
     func factsCD() -> AnyPublisher<[FunFact], Never>
@@ -53,7 +53,7 @@ final class FactCoreData: FactCoreDataProtocol {
     }
     
     private
-    func factCategoryCD(cat: FunFactCategory) async throws -> CDFactCategory? {
+    func factCategoryCD(cat: Category) async throws -> CDFactCategory? {
         let request = CDFactCategory.fetchRequest()
         request.predicate = NSPredicate(format: "id == %ld", cat.id as CVarArg)
         if let result = try? context.fetch(request).first {
@@ -64,7 +64,7 @@ final class FactCoreData: FactCoreDataProtocol {
     }
     
     private
-    func createCategoryCD(cat: FunFactCategory) async throws -> CDFactCategory {
+    func createCategoryCD(cat: Category) async throws -> CDFactCategory {
         let newCat = CDFactCategory(context: context)
         newCat.id = Int16(cat.id)
         newCat.name = cat.name
@@ -105,7 +105,7 @@ final class FactRepository: FactRepositoryProtocol {
     init(coreData: FactCoreDataProtocol) {
         self.coreData = coreData
     }
-    func fetch(for page: Int, categoryId: Int?) async throws -> FactObject {
+    func fetch(for page: Int, categoryId: Int?) async throws -> ItemsObject<FunFact> {
         let thoughtsEndpoint = FactsEndpoint.list(page, categoryId)
         return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
     }
@@ -121,7 +121,7 @@ final class FactRepository: FactRepositoryProtocol {
         return try await SwiftServices.shared.request(endpoint: factEndpoint)
     }
 
-    func fetchCategories() async throws -> [FunFactCategory] {
+    func fetchCategories() async throws -> [Category] {
         let thoughtsEndpoint = FactsEndpoint.categories
         return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
     }

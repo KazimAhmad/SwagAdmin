@@ -9,43 +9,23 @@ import Combine
 import CoreData
 import Foundation
 
-protocol FactRepositoryProtocol {
-    func fetch(for page: Int, categoryId: Int?) async throws -> ItemsObject<FunFact>
-    func create(fact: FunFact) async throws -> Int
-    func delete(for ids: [Int]) async throws
-    func deleteCategories(for ids: [Int]) async throws
-
-    func fetchCategories() async throws -> [Category]
-    func createCategory(name: String) async throws -> Int
-    
-    func factsCD() -> AnyPublisher<[FunFact], Never>
-    func deleteCD(id: Int) async throws
-    func createCD(fact: FunFact) async throws -> Int
-}
-
-protocol FactCoreDataProtocol {
-    func factsCD() -> AnyPublisher<[FunFact], Never>
-    func deleteCD(id: Int) async throws
-    func createCD(fact: FunFact) async throws -> Int
-}
-
-final class FactCoreData: FactCoreDataProtocol {
+final class FactCoreData: CoreDataProtocol {
     private let context: NSManagedObjectContext
     init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    func createCD(fact: FunFact) async throws -> Int {
+    func createCD(object: FunFact) async throws -> Int {
         let newFact = CDFact(context: context)
         let formatter = DateFormatter()
         formatter.dateFormat = "MMddHHmmss"
         let now = formatter.string(from: Date())
         let nowAsID = Int(now) ?? 0
         newFact.id = Int16(nowAsID)
-        newFact.title = fact.title
-        newFact.more = fact.description
-        newFact.link = fact.link
-        let category = try await factCategoryCD(cat: fact.category)
+        newFact.title = object.title
+        newFact.more = object.description
+        newFact.link = object.link
+        let category = try await factCategoryCD(cat: object.category)
         
         newFact.category = category
         save()
@@ -72,7 +52,7 @@ final class FactCoreData: FactCoreDataProtocol {
         return newCat
     }
     
-    func factsCD() -> AnyPublisher<[FunFact], Never> {
+    func objectsCD() -> AnyPublisher<[FunFact], Never> {
         let requestCD = CDFact.fetchRequest()
         
         return context.fetchPublisher(requestCD)
@@ -99,19 +79,19 @@ final class FactCoreData: FactCoreDataProtocol {
     }
 }
 
-final class FactRepository: FactRepositoryProtocol {
-    private let coreData: FactCoreDataProtocol
+final class FactRepository: RepositoryProtocol {
+    private let coreData: FactCoreData
     
-    init(coreData: FactCoreDataProtocol) {
+    init(coreData: FactCoreData) {
         self.coreData = coreData
     }
     func fetch(for page: Int, categoryId: Int?) async throws -> ItemsObject<FunFact> {
-        let thoughtsEndpoint = FactsEndpoint.list(page, categoryId)
-        return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
+        let factsEndpoint = FactsEndpoint.list(page, categoryId)
+        return try await SwiftServices.shared.request(endpoint: factsEndpoint)
     }
     
-    func create(fact: FunFact) async throws -> Int {
-        let factEndpoint = FactsEndpoint.add(fact)
+    func create(object: FunFact) async throws -> Int {
+        let factEndpoint = FactsEndpoint.add(object)
         let newFactIdObj: NewObjectId = try await SwiftServices.shared.request(endpoint: factEndpoint)
         return newFactIdObj.id
     }
@@ -122,8 +102,8 @@ final class FactRepository: FactRepositoryProtocol {
     }
 
     func fetchCategories() async throws -> [Category] {
-        let thoughtsEndpoint = FactsEndpoint.categories
-        return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
+        let factsEndpoint = FactsEndpoint.categories
+        return try await SwiftServices.shared.request(endpoint: factsEndpoint)
     }
     
     func createCategory(name: String) async throws -> Int {
@@ -137,15 +117,15 @@ final class FactRepository: FactRepositoryProtocol {
         return try await SwiftServices.shared.request(endpoint: factDeletionEndpoint)
     }
     
-    func factsCD() -> AnyPublisher<[FunFact], Never> {
-        coreData.factsCD()
+    func objectsCD() -> AnyPublisher<[FunFact], Never> {
+        coreData.objectsCD()
     }
     
     func deleteCD(id: Int) async throws {
         try await coreData.deleteCD(id: id)
     }
     
-    func createCD(fact: FunFact) async throws -> Int {
-        return try await coreData.createCD(fact: fact)
+    func createCD(object: FunFact) async throws -> Int {
+        return try await coreData.createCD(object: object)
     }
 }

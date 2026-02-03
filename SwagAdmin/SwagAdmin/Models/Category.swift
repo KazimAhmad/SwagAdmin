@@ -18,3 +18,10 @@ extension Category {
         self.name = entity.name ?? ""
     }
 }
+
+extension Category {
+    init(from entity: CDMovieCategory) throws {
+        self.id = Int(entity.id)
+        self.name = entity.name ?? ""
+    }
+}

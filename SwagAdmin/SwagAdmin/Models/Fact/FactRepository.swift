@@ -10,7 +10,7 @@ import CoreData
 import Foundation
 
 protocol FactRepositoryProtocol {
-    func fetch(for page: Int) async throws -> FactObject
+    func fetch(for page: Int, categoryId: Int?) async throws -> FactObject
     func create(fact: FunFact) async throws -> Int
     func delete(for ids: [Int]) async throws
     func deleteCategories(for ids: [Int]) async throws
@@ -105,8 +105,8 @@ final class FactRepository: FactRepositoryProtocol {
     init(coreData: FactCoreDataProtocol) {
         self.coreData = coreData
     }
-    func fetch(for page: Int) async throws -> FactObject {
-        let thoughtsEndpoint = FactsEndpoint.list(page)
+    func fetch(for page: Int, categoryId: Int?) async throws -> FactObject {
+        let thoughtsEndpoint = FactsEndpoint.list(page, categoryId)
         return try await SwiftServices.shared.request(endpoint: thoughtsEndpoint)
     }
     

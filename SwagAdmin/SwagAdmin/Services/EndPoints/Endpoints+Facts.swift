@@ -8,7 +8,7 @@
 import Foundation
 
 enum FactsEndpoint: Endpoint {
-    case list(Int)
+    case list(Int, Int?)
     case add(FunFact)
     case delete([Int])
     case categories
@@ -45,8 +45,12 @@ enum FactsEndpoint: Endpoint {
     
     var query: [String: Any]? {
         switch self {
-        case .list(let page):
-            return ["page": page]
+        case .list(let page, let categoryID):
+            var query = ["page": page]
+            if let categoryID = categoryID {
+                query["category_id"] = categoryID
+            }
+            return query
         default:
             return nil
         }

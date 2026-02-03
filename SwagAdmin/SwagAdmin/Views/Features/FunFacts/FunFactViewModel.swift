@@ -70,8 +70,16 @@ class FunFactViewModel: ObservableObject {
                 self?.selectedCategory = newCategory
                 self?.categories.insert(newCategory, at: 0)
             }
+            self?.viewState = .loading
+            self?.page = 0
+            self?.funFactObj = nil
+            self?.getFacts()
         }, didClearCategory: { [weak self] in
             self?.selectedCategory = nil
+            self?.viewState = .loading
+            self?.page = 0
+            self?.funFactObj = nil
+            self?.getFacts()
         }, didDeleteCategory: { [weak self] cat in
             let catToDel: FunFactCategory = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
             self?.categories.removeAll(where: { $0.id == catToDel.id })
@@ -86,6 +94,7 @@ class FunFactViewModel: ObservableObject {
                 self?.viewState = .info
             } else {
                 self?.funFactObj?.items.insert(fact, at: 0)
+                self?.funFactObj?.total = (self?.funFactObj?.total ?? 0) + 1
             }
         }))
     }
@@ -109,7 +118,7 @@ class FunFactViewModel: ObservableObject {
         page = page + 1
         Task {
             do {
-                let funFact = try await coordinator?.repository.fetch(for: page)
+                let funFact = try await coordinator?.repository.fetch(for: page, categoryId: selectedCategory?.id)
                 if self.funFactObj == nil {
                     self.funFactObj = funFact
                 } else {

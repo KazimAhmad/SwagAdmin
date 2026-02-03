@@ -13,6 +13,7 @@ protocol FactRepositoryProtocol {
     func fetch(for page: Int) async throws -> FactObject
     func create(fact: FunFact) async throws -> Int
     func delete(for ids: [Int]) async throws
+    func deleteCategories(for ids: [Int]) async throws
 
     func fetchCategories() async throws -> [FunFactCategory]
     func createCategory(name: String) async throws -> Int
@@ -129,6 +130,11 @@ final class FactRepository: FactRepositoryProtocol {
         let factEndpoint = FactsEndpoint.addCategory(name)
         let newFactIdObj: NewObjectId = try await SwiftServices.shared.request(endpoint: factEndpoint)
         return newFactIdObj.id
+    }
+    
+    func deleteCategories(for ids: [Int]) async throws {
+        let factDeletionEndpoint = FactsEndpoint.deleteCategories(ids)
+        return try await SwiftServices.shared.request(endpoint: factDeletionEndpoint)
     }
     
     func factsCD() -> AnyPublisher<[FunFact], Never> {

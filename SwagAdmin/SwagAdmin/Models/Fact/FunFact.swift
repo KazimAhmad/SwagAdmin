@@ -8,7 +8,7 @@
 import Foundation
 
 struct FactObject: Decodable {
-    let total: Int
+    var total: Int
     var items: [FunFact]
 }
 

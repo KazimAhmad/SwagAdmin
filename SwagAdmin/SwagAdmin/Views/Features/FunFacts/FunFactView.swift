@@ -129,6 +129,18 @@ struct FunFactView: View {
             ForEach(viewModel.funFacts().indices, id: \.self) { factIndex in
                 let fact = viewModel.funFacts()[factIndex]
                 FactView(fact: fact, edge: factIndex % 2 == 0 ? .leading : .trailing)
+                    .onTapGesture {
+                        viewModel.showMore(of: fact)
+                    }
+                    .onLongPressGesture {
+                        viewModel.showDeleteAlert(for: fact)
+                    }
+            }
+            if viewModel.hasMoreFacts() {
+                LoadingView()
+                    .onAppear {
+                        viewModel.getFacts()
+                    }
             }
         }
     }

@@ -38,9 +38,11 @@ struct FactView: View {
                     Spacer()
                 }
             }
-            if let link = fact.link {
+            if let link = fact.link, !link.isEmpty {
                 Button {
-                    print(link)
+                    if let url = URL(string: link) {
+                        UIApplication.shared.open(url)                        
+                    }
                 } label: {
                     HStack {
                         Text("Learn More")

@@ -33,4 +33,7 @@ enum Images {
     static let disclose = "chevron.right"
     
     static let plus = "plus.circle.fill"
+    
+    static let questionMark = "questionmark.circle"
+    static let lightBulb = "lightbulb.circle"
 }

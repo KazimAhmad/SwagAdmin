@@ -30,6 +30,33 @@ class FunFactViewModel: ObservableObject {
         return selectedCategory?.id == category.id
     }
     
+    func hasMoreFacts() -> Bool {
+        funFactObj?.items.count ?? 0 < funFactObj?.total ?? 0
+    }
+    
+    func showMore(of fact: FunFact) {
+        let config = SeeMoreConfig(type: .fact,
+                                   title: fact.title,
+                                   description: fact.description) { [weak self] in
+            self?.coordinator?.dismissFullScreenCover()
+        }
+        coordinator?.present(fullScreenCover: .seeMore(config))
+    }
+    
+    func showDeleteAlert(for fact: FunFact) {
+        let config = AlertConfig(alertType: .delete,
+                                 message: "You sure you want to delete this fact?",
+                                 buttons: AlertButtons(confirmTitle: "Delete",
+                                                       showCancel: true,
+                                                       onConfirm: { [weak self] in
+            self?.delete(fact: fact)
+            self?.coordinator?.dismissFullScreenCover()
+        }, onCancel: { [weak self] in
+            self?.coordinator?.dismissFullScreenCover()
+        }))
+        coordinator?.present(fullScreenCover: .alert(config))
+    }
+    
     func seeAllCategories() {
         let allCategories: [AppCategory] = categories.map { AppCategory(id: $0.id, name: $0.name) }
         coordinator?.seeAllCategories(categories: allCategories,
@@ -43,9 +70,11 @@ class FunFactViewModel: ObservableObject {
                 self?.selectedCategory = newCategory
                 self?.categories.insert(newCategory, at: 0)
             }
-        },
-                                     didClearCategory: { [weak self] in
+        }, didClearCategory: { [weak self] in
             self?.selectedCategory = nil
+        }, didDeleteCategory: { [weak self] cat in
+            let catToDel: FunFactCategory = .init(id: cat?.id ?? 0, name: cat?.name ?? "")
+            self?.categories.removeAll(where: { $0.id == catToDel.id })
         })
     }
     
@@ -93,6 +122,21 @@ class FunFactViewModel: ObservableObject {
                 }
             } catch {
                 viewState = .error(error)
+            }
+        }
+    }
+    
+    func delete(fact: FunFact) {
+        Task {
+            do {
+                try await coordinator?.repository.delete(for: [fact.id])
+                funFactObj?.items.removeAll { $0.id == fact.id }
+                funFactObj?.total = (funFactObj?.total ?? 0) - 1
+                if funFactObj?.items.isEmpty ?? true {
+                    viewState = .empty
+                }
+            } catch {
+                print(error)
             }
         }
     }

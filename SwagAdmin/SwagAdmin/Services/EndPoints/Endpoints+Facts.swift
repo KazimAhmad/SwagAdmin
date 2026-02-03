@@ -13,7 +13,8 @@ enum FactsEndpoint: Endpoint {
     case delete([Int])
     case categories
     case addCategory(String)
-    
+    case deleteCategories([Int])
+
     var path: String {
         switch self {
         case .list, .delete(_):
@@ -22,7 +23,7 @@ enum FactsEndpoint: Endpoint {
             return baseURLString + "facts/create"
         case .addCategory:
             return baseURLString + "facts/category/create"
-        case .categories:
+        case .categories, .deleteCategories:
             return baseURLString + "facts/categories"
         }
     }
@@ -33,7 +34,7 @@ enum FactsEndpoint: Endpoint {
             return .get
         case .add, .addCategory:
             return .post
-        case .delete(_):
+        case .delete, .deleteCategories:
             return .delete
         }
     }
@@ -53,7 +54,7 @@ enum FactsEndpoint: Endpoint {
     
     var body: HTTPBody? {
         switch self {
-        case .delete(let ids):
+        case .delete(let ids), .deleteCategories(let ids):
             return HTTPBody.json(["ids": ids])
         case .add(let fact):
             return HTTPBody.json(fact)

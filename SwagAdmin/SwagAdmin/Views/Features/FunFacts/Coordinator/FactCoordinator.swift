@@ -51,6 +51,9 @@ class FactCoordinator: CoordinatorProtocol {
         case .categories(let config):
             CategoriesView(viewModel: CategoriesViewModel(config: config))
                 .background(ClearBackgroundView())
+        case .alert(let config):
+            AlertView(config: config)
+                .background(ClearBackgroundView())
         }
     }
 }
@@ -60,7 +63,8 @@ extension FactCoordinator {
     func seeAllCategories(categories: [AppCategory],
                           selectedCategory: AppCategory?,
                           didSelectCategory: ((AppCategory?) -> Void)?,
-                          didClearCategory: (() -> Void)?) {
+                          didClearCategory: (() -> Void)?,
+                          didDeleteCategory: ((AppCategory?) -> Void)?) {
         present(fullScreenCover: .categories(.init(categories: categories,
                                                    selectedCategory: selectedCategory,
                                                    categoryType: .facts,
@@ -71,6 +75,8 @@ extension FactCoordinator {
                                                    didClearCategory: { [weak self] in
             didClearCategory?()
             self?.dismissFullScreenCover()
+        }, didDeleteCategory: { cat in
+            didDeleteCategory?(cat)
         },
                                                    dismiss: { [weak self] in
             self?.dismissFullScreenCover()

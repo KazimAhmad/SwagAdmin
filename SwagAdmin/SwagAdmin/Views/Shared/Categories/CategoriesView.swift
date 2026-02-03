@@ -16,12 +16,53 @@ struct CategoriesView: View {
             GeometryReader { geometry in
                 VStack {
                     Spacer()
+                    deleteCategory()
                     addNewCategory()
                     categoriesView(height: geometry.size.height / 2)
                 }
             }
         }
         .ignoresSafeArea()
+    }
+    
+    func deleteCategory() -> some View {
+        HStack {
+            Menu {
+                ForEach(viewModel.categories, id: \.id) { category in
+                    Button(action: {
+                        viewModel.categoryToDelete = category
+                    }) {
+                        Text(category.name)
+                    }
+                }
+            } label: {
+                HStack {
+                    Text("Delete category:")
+                        .font(AppTypography.body(size: 18))
+                        .foregroundStyle(Color.white)
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                        )
+                    Text(viewModel.categoryToDelete?.name ?? "-- --")
+                        .font(AppTypography.body(size: 18))
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.white)
+                        )
+                    Spacer()
+                }
+            }
+            Button {
+                viewModel.deleteCategory()
+            } label: {
+                Image(systemName: Images.delete)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+            }
+        }
+        .padding()
     }
     
     func addNewCategory() -> some View {
@@ -102,5 +143,10 @@ struct CategoriesView: View {
 }
 
 #Preview {
-    CategoriesView(viewModel: CategoriesViewModel(config: CategoriesConfig.init(categories: [], categoryType: .facts, didSelectCategory: { _ in }, didClearCategory: { }, dismiss: { })))
+    CategoriesView(viewModel: CategoriesViewModel(config: CategoriesConfig.init(categories: [],
+                                                                                categoryType: .facts,
+                                                                                didSelectCategory: { _ in },
+                                                                                didClearCategory: { },
+                                                                                didDeleteCategory: { _ in },
+                                                                                dismiss: { })))
 }

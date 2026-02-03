@@ -25,6 +25,7 @@ enum FactSheet: Identifiable {
 enum FactFullScreenCover: Identifiable {
     case seeMore(SeeMoreConfig)
     case categories(CategoriesConfig)
+    case alert(AlertConfig)
     
     var id: Int {
         switch self {
@@ -32,6 +33,8 @@ enum FactFullScreenCover: Identifiable {
             return 1
             case .categories:
             return 2
+        case .alert:
+            return 3
         }
     }
 }

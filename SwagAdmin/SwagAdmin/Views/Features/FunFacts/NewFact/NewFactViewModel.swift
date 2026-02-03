@@ -55,11 +55,11 @@ class NewFactViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
-                let newID = try await dependency?.create(fact: FunFact.init(id: 0,
-                                                                            title: title,
-                                                                            description: description,
-                                                                            category: category,
-                                                                            link: link))
+                let newID = try await dependency?.create(object: FunFact.init(id: 0,
+                                                                              title: title,
+                                                                              description: description,
+                                                                              category: category,
+                                                                              link: link))
                 finsihPublish(id: newID ?? 0)
             } catch {
                 print(error)
@@ -104,11 +104,11 @@ class NewFactViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
-                let newID = try await dependency?.createCD(fact: FunFact(id: 0,
-                                                                         title: title,
-                                                                         description: description,
-                                                                         category: category,
-                                                                         link: link))
+                let newID = try await dependency?.createCD(object: FunFact(id: 0,
+                                                                           title: title,
+                                                                           description: description,
+                                                                           category: category,
+                                                                           link: link))
                 viewState = .info
                 finsihDrafts(id: newID ?? 0)
                 dismiss()

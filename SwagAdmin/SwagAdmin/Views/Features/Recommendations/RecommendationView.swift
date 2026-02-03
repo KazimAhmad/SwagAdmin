@@ -16,8 +16,10 @@ struct RecommendationView: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                Text("Recommendation View")
+            if viewModel.selectedTab.id == RecommendationTab.movies.rawValue {
+                MoviesView()
+            } else {
+                Text("Books")
             }
             floatingBarView()
         }

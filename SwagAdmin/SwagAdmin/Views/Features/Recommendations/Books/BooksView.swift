@@ -1,5 +1,5 @@
 //
-//  MoviesView.swift
+//  BooksView.swift
 //  SwagAdmin
 //
 //  Created by Kazim Ahmad on 03/02/2026.
@@ -19,8 +19,26 @@ struct BooksView: View {
             VStack {
                 headerView()
                 categoriesView()
-                ScrollView {
+                Button {
+                    viewModel.addNewBook()
+                } label: {
+                    HStack {
+                        Spacer()
+                        Image(systemName: Images.plus)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                    }
+                }
 
+                ScrollView {
+                    LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
+                        ForEach(viewModel.books(), id: \.id) { book in
+                            MovieBookView(item: .init(from: book))
+                                .onTapGesture {
+                                    viewModel.showMore(of: book)
+                                }
+                        }
+                    }
                 }
             }
             .foregroundColor(Color.white)
@@ -82,5 +100,5 @@ struct BooksView: View {
 }
 
 #Preview {
-    BooksView(viewModel: BooksViewModel())
+    BooksView(viewModel: BooksViewModel(coordinator: nil))
 }

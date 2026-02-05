@@ -16,7 +16,7 @@ class BooksCoordinator: CoordinatorProtocol {
     @Published var sheet: Sheet?
     @Published var fullScreenCover: FullScreenCover?
 
-    let movieRepository = MovieRepository(coreData: MovieCoreData(context: PersistenceController.shared.container.viewContext))
+    let repository = BookRepository(coreData: BookCoreData(context: PersistenceController.shared.container.viewContext))
     
     var coordinatorView: AnyView {
         AnyView(CoordinatorView(coordinator: self))
@@ -29,14 +29,17 @@ class BooksCoordinator: CoordinatorProtocol {
     func build(page: BooksRoute) -> some View {
         switch page {
         case .books:
-            return BooksView(viewModel: BooksViewModel())
+            return BooksView(viewModel: BooksViewModel(coordinator: self))
         }
     }
     
     func build(sheet: BooksSheet) -> some View {
         switch sheet {
         case .new(let categories, let callback):
-            Text("new")
+            NewBookView(viewModel: NewBookViewModel(categories: categories,
+                                                    dependency: repository,
+                                                    onDismiss: dismissSheet,
+                                                    didPublish: callback))
         }
     }
     

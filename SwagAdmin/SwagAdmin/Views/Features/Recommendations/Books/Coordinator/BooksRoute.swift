@@ -12,7 +12,7 @@ enum BooksRoute: Hashable {
 }
 
 enum BooksSheet: Identifiable {
-    case new([Category], ((Movie) -> Void)?)
+    case new([Category], ((Book) -> Void)?)
     
     var id: Int {
         switch self {

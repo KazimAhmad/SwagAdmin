@@ -22,6 +22,7 @@ struct RecommendationView: View {
                 viewModel.booksCoordinator.coordinatorView
             }
             floatingBarView()
+                .padding(.horizontal)
         }
     }
 

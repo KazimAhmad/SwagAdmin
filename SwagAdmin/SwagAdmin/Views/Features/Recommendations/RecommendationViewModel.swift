@@ -38,6 +38,9 @@ class RecommendationViewModel: ObservableObject {
     }
     @Published var selectedTab: FloatingTab
     
+    let moviesCoordinator = MoviesCoordinator()
+    let booksCoordinator = BooksCoordinator()
+    
     init() {
         self.selectedTab = floatingTabs[0]
     }

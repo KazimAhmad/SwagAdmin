@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct NewFactView: View {
-    @StateObject private var viewModel: NewFactViewModel
+struct NewMovieView: View {
+    @StateObject private var viewModel: NewMovieViewModel
     
-    init(viewModel: NewFactViewModel) {
+    init(viewModel: NewMovieViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -20,27 +20,43 @@ struct NewFactView: View {
                 .fill(Color.primary)
                 .frame(width: 80, height: 4)
                 .padding()
-            Text("New Fact")
+            Text("New Movie")
                 .font(AppTypography.title(size: 18))
             ScrollView {
-                Text("Title")
+                Text("Name")
                     .font(AppTypography.body(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
-                TextField("Title or a heading...",
+                TextField("Movie name...",
                           text: $viewModel.title,
                           axis: .vertical)
                     .font(AppTypography.body(size: 16))
                     .padding(.horizontal)
-                Text("Description")
+                Text("My Review")
                     .font(AppTypography.body(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
-                TextField("Description...",
-                          text: $viewModel.description,
+                TextField("My review...",
+                          text: $viewModel.myReview,
                           axis: .vertical)
                     .font(AppTypography.body(size: 16))
                     .padding(.horizontal)
+                VStack {
+                    HStack {
+                        Text("My Rating:")
+                            .font(AppTypography.body(size: 16))
+                        Spacer()
+                        Text(String(format: "%.1f", viewModel.rating ?? 0.0))
+                            .font(AppTypography.body(size: 20))
+                    }
+                    Slider(
+                        value: $viewModel.rating.toUnwrapped(defaultValue: 0.0),
+                        in: 1...10,
+                        step: 0.1
+                    )
+                }
+                .padding(.horizontal)
+
                 Menu {
                     ForEach(viewModel.categories, id: \.id) { category in
                         Button(action: {
@@ -68,15 +84,31 @@ struct NewFactView: View {
                 }
                 .padding()
                 
-                Text("Link (Optional)")
+                Text("IMDB Link")
                     .font(AppTypography.body(size: 18))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                 TextField("Link...",
-                          text: $viewModel.link.toUnwrapped(defaultValue: ""),
+                          text: $viewModel.imdbLink.toUnwrapped(defaultValue: ""),
                           axis: .vertical)
                     .font(AppTypography.body(size: 16))
                     .padding(.horizontal)
+                VStack {
+                    let year = Calendar.current.component(.year, from: Date())
+                    HStack {
+                        Text("Release Year:")
+                            .font(AppTypography.body(size: 16))
+                        Spacer()
+                        Text(viewModel.releaseYear ?? String(year))
+                            .font(AppTypography.body(size: 20))
+                    }
+                    Picker("", selection: $viewModel.releaseYear) {
+                        ForEach((1888...year).reversed(), id: \.self) { index in
+                            Text(String(index)).tag(String(index))
+                        }                }
+                    .pickerStyle(.wheel)
+                }
+                .padding(.horizontal)
             }
             Spacer()
             buttonsView()
@@ -101,7 +133,7 @@ struct NewFactView: View {
                                                       borderColor: .accentColor))
 
                 Button {
-                    viewModel.publishFact()
+                    viewModel.publishThought()
                 } label: {
                     Text("Publish")
                 }
@@ -113,11 +145,11 @@ struct NewFactView: View {
 }
 
 #Preview {
-    NewFactView(viewModel: NewFactViewModel(categories: [Category(id: 0,
+    NewMovieView(viewModel: NewMovieViewModel(categories: [Category(id: 0,
                                                                   name: "Animals"),
                                                          Category(id: 1,
                                                                   name: "Birds")],
-                                            dependency: nil,
-                                            onDismiss: { },
-                                            didPublish: { _ in }))
+                                              dependency: nil,
+                                              onDismiss: { },
+                                              didPublish: { _ in }))
 }

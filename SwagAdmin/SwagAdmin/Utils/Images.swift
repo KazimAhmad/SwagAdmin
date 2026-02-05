@@ -9,6 +9,7 @@ import Foundation
 
 enum Images {
     static let logo = "logo"
+    static let newspaper = "newspaper"
     //System images
     //tabView
     static let home = "house.circle"

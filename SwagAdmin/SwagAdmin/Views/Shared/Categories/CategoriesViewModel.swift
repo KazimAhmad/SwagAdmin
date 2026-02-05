@@ -124,17 +124,36 @@ extension CategoriesViewModel {
             }
         }
     }
-
 }
 
 extension CategoriesViewModel {
     private func addMovieCategory() {
+        if newCategoryName.isEmpty { return }
+        let repo = MovieRepository(coreData: MovieCoreData(context: PersistenceController.shared.container.viewContext))
+        Task {
+            do {
+                let id: Int = try await repo.createCategory(name: newCategoryName)
+                let newCategory = Category(id: id, name: newCategoryName)
+                didSelectCategory?(newCategory)
+            } catch {
+                print(error)
+            }
+        }
     }
     
     private func deleteMovieCategory(_ categoryToDelete: Category) {
-        
+        let repo = MovieRepository(coreData: MovieCoreData(context: PersistenceController.shared.container.viewContext))
+        Task {
+            do {
+                try await repo.deleteCategories(for: [categoryToDelete.id])
+                categories.removeAll(where: { $0.id == categoryToDelete.id })
+                didDeleteCategory?(categoryToDelete)
+                self.categoryToDelete = nil
+            } catch {
+                print(error)
+            }
+        }
     }
-
 }
 
 extension CategoriesViewModel {

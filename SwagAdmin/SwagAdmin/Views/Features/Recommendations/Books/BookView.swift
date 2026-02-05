@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MovieView: View {
+struct BookView: View {
     var movie: Movie
 
     var body: some View {
@@ -26,6 +26,8 @@ struct MovieView: View {
                 .font(AppTypography.note(size: 14))
                 .lineLimit(2)
             HStack {
+                Text(movie.category.name)
+                    .font(AppTypography.title(size: 16))
                 Spacer()
                 Text(String(movie.rating))
                     .font(AppTypography.note(size: 16))
@@ -49,11 +51,6 @@ struct MovieView: View {
                         )
                 }
             }
-            HStack {
-                Text(movie.category.name)
-                    .font(AppTypography.title(size: 16))
-                Spacer()
-            }
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 20)
@@ -63,12 +60,8 @@ struct MovieView: View {
         }
         .padding()
         .background(
-            Image(Images.newspaper)
-                .resizable()
-                .overlay(content: {
-                    Color.brown.opacity(0.6)
-                })
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(uiColor: .white))
         )
         .foregroundStyle(Color.black)
     }

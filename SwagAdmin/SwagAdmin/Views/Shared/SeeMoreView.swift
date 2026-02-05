@@ -17,6 +17,8 @@ enum SeeMoreImageSize: CGFloat, CaseIterable {
 enum SeeMoreType {
     case thought
     case fact
+    case movie
+    case book
     
     var image: Image {
         switch self {
@@ -24,6 +26,10 @@ enum SeeMoreType {
             return Image(systemName: Images.lightBulb)
         case .fact:
             return Image(systemName: Images.questionMark)
+        case .movie:
+            return Image(systemName: Images.movie)
+        case .book:
+            return Image(systemName: Images.book)
         }
     }
     
@@ -33,6 +39,10 @@ enum SeeMoreType {
             return "Thoughts"
         case .fact:
             return "Facts"
+        case .movie:
+            return "Movies"
+        case .book:
+            return "Books"
         }
     }
     
@@ -42,6 +52,8 @@ enum SeeMoreType {
             return "More on this:"
         case .fact:
             return "Did you know?"
+        case .movie, .book:
+            return "My Review:"
         }
     }
 }

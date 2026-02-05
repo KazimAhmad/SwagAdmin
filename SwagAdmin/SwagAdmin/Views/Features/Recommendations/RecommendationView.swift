@@ -17,13 +17,12 @@ struct RecommendationView: View {
     var body: some View {
         ZStack {
             if viewModel.selectedTab.id == RecommendationTab.movies.rawValue {
-                MoviesView()
+                viewModel.moviesCoordinator.coordinatorView
             } else {
-                Text("Books")
+                viewModel.booksCoordinator.coordinatorView
             }
             floatingBarView()
         }
-        .padding()
     }
 
     func floatingBarView() -> some View {

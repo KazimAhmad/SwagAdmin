@@ -45,7 +45,7 @@ class NewFactViewModel: ObservableObject {
         onDismiss?()
     }
     
-    func publishThought() {
+    func publishFact() {
         if title.isEmpty && description.isEmpty {
             return
         }

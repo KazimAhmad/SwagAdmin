@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct MoviesView: View {
-    @StateObject var viewModel: MoviesViewModel
-    init(viewModel: MoviesViewModel) {
+struct BooksView: View {
+    @StateObject var viewModel: BooksViewModel
+    init(viewModel: BooksViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -19,43 +19,23 @@ struct MoviesView: View {
             VStack {
                 headerView()
                 categoriesView()
-                Button {
-                    viewModel.addNewMovie()
-                } label: {
-                    HStack {
-                        Spacer()
-                        Image(systemName: Images.plus)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
-                }
-
                 ScrollView {
-                    LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
-                        ForEach(viewModel.movies(), id: \.id) { movie in
-                            MovieView(movie: movie)
-                        }
-                    }
+
                 }
             }
-            .foregroundColor(Color.black)
+            .foregroundColor(Color.white)
 
             .padding()
-        }
-        .task {
-            if viewModel.categories.count == 0 {
-                viewModel.getInitialData()
-            }
         }
     }
     
     func backgroundView() -> some View {
         ZStack {
-            Color.black
+            Color.white
             VStack {
                 GeometryReader { geometry in
                     Capsule()
-                        .fill(Color.accentColor)
+                        .fill(Color.purple)
                         .offset(y: -geometry.size.height / 2)
                 }
                 Spacer()
@@ -66,12 +46,12 @@ struct MoviesView: View {
     
     func headerView() -> some View {
         HStack {
-            Text("Movies")
+            Text("Books")
                 .font(AppTypography.title(size: 32))
             Spacer()
-            Image(systemName: Images.movie)
+            Image(systemName: Images.book)
                 .resizable()
-                .frame(width: 34, height: 34)
+                .frame(width: 32, height: 38)
         }
     }
     
@@ -102,5 +82,5 @@ struct MoviesView: View {
 }
 
 #Preview {
-    MoviesView(viewModel: MoviesViewModel(coordinator: nil))
+    BooksView(viewModel: BooksViewModel())
 }

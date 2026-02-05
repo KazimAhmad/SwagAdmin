@@ -33,7 +33,7 @@ struct MoviesView: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
                         ForEach(viewModel.movies(), id: \.id) { movie in
-                            MovieView(movie: movie)
+                            MovieBookView(item: .init(from: movie))
                         }
                     }
                 }

@@ -34,6 +34,9 @@ struct MoviesView: View {
                     LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
                         ForEach(viewModel.movies(), id: \.id) { movie in
                             MovieBookView(item: .init(from: movie))
+                                .onTapGesture {
+                                    viewModel.showMore(of: movie)
+                                }
                         }
                     }
                 }

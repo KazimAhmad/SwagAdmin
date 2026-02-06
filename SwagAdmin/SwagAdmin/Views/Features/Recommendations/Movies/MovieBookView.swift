@@ -54,7 +54,6 @@ struct MovieBookView: View {
                 .frame(height: 20)
             Text(item.myReview)
                 .font(AppTypography.note(size: 14))
-                .lineLimit(2)
             HStack {
                 Spacer()
                 Text(String(item.rating))
@@ -91,6 +90,7 @@ struct MovieBookView: View {
                     .stroke(Color.black, lineWidth: 1)
             )
         }
+        .lineLimit(2)
         .padding()
         .background(
             Image(Images.newspaper)

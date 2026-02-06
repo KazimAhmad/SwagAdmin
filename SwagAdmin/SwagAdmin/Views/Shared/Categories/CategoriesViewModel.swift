@@ -158,10 +158,30 @@ extension CategoriesViewModel {
 
 extension CategoriesViewModel {
     private func addBookCategory() {
+        if newCategoryName.isEmpty { return }
+        let repo = BookRepository(coreData: BookCoreData(context: PersistenceController.shared.container.viewContext))
+        Task {
+            do {
+                let id: Int = try await repo.createCategory(name: newCategoryName)
+                let newCategory = Category(id: id, name: newCategoryName)
+                didSelectCategory?(newCategory)
+            } catch {
+                print(error)
+            }
+        }
     }
     
     private func deleteBookCategory(_ categoryToDelete: Category) {
-
+        let repo = BookRepository(coreData: BookCoreData(context: PersistenceController.shared.container.viewContext))
+        Task {
+            do {
+                try await repo.deleteCategories(for: [categoryToDelete.id])
+                categories.removeAll(where: { $0.id == categoryToDelete.id })
+                didDeleteCategory?(categoryToDelete)
+                self.categoryToDelete = nil
+            } catch {
+                print(error)
+            }
+        }
     }
-
 }

@@ -133,7 +133,7 @@ struct NewMovieView: View {
                                                       borderColor: .accentColor))
 
                 Button {
-                    viewModel.publishThought()
+                    viewModel.publishMovie()
                 } label: {
                     Text("Publish")
                 }

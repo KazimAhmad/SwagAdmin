@@ -88,7 +88,7 @@ class FunFactViewModel: ObservableObject {
         coordinator?.present(sheet: .new(categories,
                                          { [weak self] fact in
             if self?.funFactObj == nil {
-                self?.funFactObj = .init(total: 0, items: [fact])
+                self?.funFactObj = .init(total: 1, items: [fact])
                 self?.viewState = .info
             } else {
                 self?.funFactObj?.items.insert(fact, at: 0)

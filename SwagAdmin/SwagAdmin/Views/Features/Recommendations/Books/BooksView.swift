@@ -29,21 +29,16 @@ struct BooksView: View {
                             .frame(width: 30, height: 30)
                     }
                 }
-
-                ScrollView {
-                    LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
-                        ForEach(viewModel.books(), id: \.id) { book in
-                            MovieBookView(item: .init(from: book))
-                                .onTapGesture {
-                                    viewModel.showMore(of: book)
-                                }
-                        }
-                    }
-                }
+                infoView()
             }
             .foregroundColor(Color.white)
 
             .padding()
+        }
+        .task {
+            if viewModel.categories.count == 0 {
+                viewModel.getInitialData()
+            }
         }
     }
     
@@ -82,8 +77,18 @@ struct BooksView: View {
                             .font(AppTypography.body(size: 16))
                             .padding()
                             .background {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.purple)
+                                if viewModel.isSelectedCategory(category) {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.darkerOrange)
+                                } else {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.clear)
+                                        .stroke(Color.white, lineWidth: 1)
+                                }
+                            }
+                            .onTapGesture {
+                                viewModel.selectedCategory = category
+                                viewModel.reinitialise()
                             }
                     }
                 }
@@ -94,6 +99,40 @@ struct BooksView: View {
             } label: {
                 Text("See All")
                     .font(AppTypography.note(size: 16))
+            }
+        }
+    }
+    
+    func infoView() -> some View {
+        ScrollView {
+            switch viewModel.viewState {
+            case .loading:
+                LoadingView()
+            case .error:
+                AlertView()
+                    .foregroundStyle(Color.white)
+            case .empty:
+                AlertView(config: AlertConfig.init(alertType: .empty))
+                    .foregroundStyle(Color.white)
+            case .info:
+                LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
+                    ForEach(viewModel.books(), id: \.id) { book in
+                        MovieBookView(item: .init(from: book))
+                            .onTapGesture {
+                                viewModel.showMore(of: book)
+                            }
+                            .onLongPressGesture {
+                                viewModel.delete(book: book)
+                            }
+                    }
+                    if viewModel.hasMoreBooks() {
+                        LoadingView()
+                            .onAppear {
+                                viewModel.getBooks()
+                            }
+                    }
+                }
+                Spacer(minLength: 160)
             }
         }
     }

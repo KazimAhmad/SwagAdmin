@@ -36,7 +36,7 @@ class HomeViewModel: ObservableObject {
                 let thought = try await thoughtRepo.fetch(for: page)
                 self.thoughts.append(contentsOf: thought.items)
                 self.total = thought.total
-                self.viewState = .info
+                self.viewState = thought.items.count == 0 ? .empty : .info
             }
             catch {
                 self.viewState = .error(error)

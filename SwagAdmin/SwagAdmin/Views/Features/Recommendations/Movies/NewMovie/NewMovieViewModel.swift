@@ -49,21 +49,25 @@ class NewMovieViewModel: ObservableObject {
         onDismiss?()
     }
     
-    func publishThought() {
+    func publishMovie() {
         if title.isEmpty && myReview.isEmpty {
             return
         }
         guard let category else {
             return
         }
+        guard let releaseYear else {
+            return
+        }
         viewState = .loading
         Task {
             do {
+                let rounded = ((rating ?? 0.0) * 10).rounded() / 10
                 let newID = try await dependency?.create(object: Movie(id: 0,
                                                                        title: title,
                                                                        myReview: myReview,
-                                                                       rating: rating ?? 0.0,
-                                                                       releaseYear: releaseYear ?? "",
+                                                                       rating: rounded,
+                                                                       releaseYear: releaseYear,
                                                                        imdbLink: imdbLink ?? "",
                                                                        category: category))
                 finsihPublish(id: newID ?? 0)
@@ -78,7 +82,7 @@ class NewMovieViewModel: ObservableObject {
         guard let category else {
             return
         }
-        let movie = Movie(id: 0,
+        let movie = Movie(id: id,
                           title: title,
                           myReview: myReview,
                           rating: rating ?? 0.0,
@@ -93,7 +97,7 @@ class NewMovieViewModel: ObservableObject {
         guard let category else {
             return
         }
-        let movie = Movie(id: 0,
+        let movie = Movie(id: id,
                           title: title,
                           myReview: myReview,
                           rating: rating ?? 0.0,
@@ -114,10 +118,11 @@ class NewMovieViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
+                let rounded = ((rating ?? 0.0) * 10).rounded() / 10
                 let newID = try await dependency?.createCD(object: Movie(id: 0,
                                                                          title: title,
                                                                          myReview: myReview,
-                                                                         rating: rating ?? 0.0,
+                                                                         rating: rounded,
                                                                          releaseYear: releaseYear ?? "",
                                                                          imdbLink: imdbLink ?? "",
                                                                          category: category))

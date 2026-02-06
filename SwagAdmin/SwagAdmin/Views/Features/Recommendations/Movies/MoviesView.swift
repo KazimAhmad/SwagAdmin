@@ -29,17 +29,7 @@ struct MoviesView: View {
                             .frame(width: 30, height: 30)
                     }
                 }
-
-                ScrollView {
-                    LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
-                        ForEach(viewModel.movies(), id: \.id) { movie in
-                            MovieBookView(item: .init(from: movie))
-                                .onTapGesture {
-                                    viewModel.showMore(of: movie)
-                                }
-                        }
-                    }
-                }
+                infoView()
             }
             .foregroundColor(Color.black)
 
@@ -87,8 +77,18 @@ struct MoviesView: View {
                             .font(AppTypography.body(size: 16))
                             .padding()
                             .background {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.purple)
+                                if viewModel.isSelectedCategory(category) {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.purple)
+                                } else {
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.clear)
+                                        .stroke(Color.black, lineWidth: 1)
+                                }
+                            }
+                            .onTapGesture {
+                                viewModel.selectedCategory = category
+                                viewModel.reinitialise()
                             }
                     }
                 }
@@ -99,6 +99,40 @@ struct MoviesView: View {
             } label: {
                 Text("See All")
                     .font(AppTypography.note(size: 16))
+            }
+        }
+    }
+    
+    func infoView() -> some View {
+        ScrollView {
+            switch viewModel.viewState {
+            case .loading:
+                LoadingView()
+            case .error:
+                AlertView()
+                    .foregroundStyle(Color.white)
+            case .empty:
+                AlertView(config: AlertConfig.init(alertType: .empty))
+                    .foregroundStyle(Color.white)
+            case .info:
+                LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
+                    ForEach(viewModel.movies(), id: \.id) { movie in
+                        MovieBookView(item: .init(from: movie))
+                            .onTapGesture {
+                                viewModel.showMore(of: movie)
+                            }
+                            .onLongPressGesture {
+                                viewModel.delete(movie: movie)
+                            }
+                    }
+                    if viewModel.hasMoreMovies() {
+                        LoadingView()
+                            .onAppear {
+                                viewModel.getMovies()
+                            }
+                    }
+                }
+                Spacer(minLength: 160)
             }
         }
     }

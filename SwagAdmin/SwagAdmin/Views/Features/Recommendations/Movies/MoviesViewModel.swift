@@ -43,6 +43,13 @@ class MoviesViewModel: ObservableObject {
         }
         coordinator?.present(fullScreenCover: .seeMore(config))
     }
+    
+    func reinitialise() {
+        viewState = .loading
+        page = 0
+        moviesObj = nil
+        getMovies()
+    }
 }
 
 extension MoviesViewModel {
@@ -92,11 +99,12 @@ extension MoviesViewModel {
         coordinator?.present(sheet: .new(categories,
                                          { [weak self] movie in
             if self?.moviesObj == nil {
-                self?.moviesObj = .init(total: 0, items: [movie])
+                self?.moviesObj = .init(total: 1, items: [movie])
                 self?.viewState = .info
             } else {
                 self?.moviesObj?.items.insert(movie, at: 0)
                 self?.moviesObj?.total = (self?.moviesObj?.total ?? 0) + 1
+                self?.viewState = .info
             }
         }))
     }

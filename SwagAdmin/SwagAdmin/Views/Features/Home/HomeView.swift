@@ -30,7 +30,7 @@ struct HomeView: View {
             }
         }
         .task {
-            if viewModel.thoughts.count == 0 {
+            if viewModel.thoughts.count == 0 && viewModel.viewState == .loading {
                 viewModel.getThoughts()                
             }
         }

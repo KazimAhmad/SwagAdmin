@@ -49,7 +49,7 @@ class NewBookViewModel: ObservableObject {
         onDismiss?()
     }
     
-    func publishThought() {
+    func publishBook() {
         if title.isEmpty && review.isEmpty {
             return
         }
@@ -59,10 +59,11 @@ class NewBookViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
+                let rounded = ((rating ?? 0.0) * 10).rounded() / 10
                 let newID = try await dependency?.create(object: Book(id: 0,
                                                                        title: title,
                                                                        review: review,
-                                                                       rating: rating ?? 0.0,
+                                                                       rating: rounded,
                                                                        releaseYear: releaseYear ?? "",
                                                                        link: link ?? "",
                                                                        category: category))
@@ -78,7 +79,7 @@ class NewBookViewModel: ObservableObject {
         guard let category else {
             return
         }
-        let book = Book(id: 0,
+        let book = Book(id: id,
                           title: title,
                           review: review,
                           rating: rating ?? 0.0,
@@ -93,7 +94,7 @@ class NewBookViewModel: ObservableObject {
         guard let category else {
             return
         }
-        let book = Book(id: 0,
+        let book = Book(id: id,
                           title: title,
                           review: review,
                           rating: rating ?? 0.0,
@@ -114,10 +115,11 @@ class NewBookViewModel: ObservableObject {
         viewState = .loading
         Task {
             do {
+                let rounded = ((rating ?? 0.0) * 10).rounded() / 10
                 let newID = try await dependency?.createCD(object: Book(id: 0,
                                                                          title: title,
                                                                          review: review,
-                                                                         rating: rating ?? 0.0,
+                                                                         rating: rounded,
                                                                          releaseYear: releaseYear ?? "",
                                                                          link: link ?? "",
                                                                          category: category))

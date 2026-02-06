@@ -133,7 +133,7 @@ struct NewBookView: View {
                                                       borderColor: .accentColor))
 
                 Button {
-                    viewModel.publishThought()
+                    viewModel.publishBook()
                 } label: {
                     Text("Publish")
                 }

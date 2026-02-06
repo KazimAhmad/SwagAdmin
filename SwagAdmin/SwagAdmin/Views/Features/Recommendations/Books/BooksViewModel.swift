@@ -34,7 +34,15 @@ class BooksViewModel: ObservableObject {
     func hasMoreBooks() -> Bool {
         booksObj?.items.count ?? 0 < booksObj?.total ?? 0
     }
-    
+        
+    func reinitialise() {
+        viewState = .loading
+        page = 0
+        getBooks()
+    }
+}
+
+extension BooksViewModel {
     func showMore(of book: Book) {
         let config = SeeMoreConfig(type: .book,
                                    title: book.title,
@@ -43,9 +51,7 @@ class BooksViewModel: ObservableObject {
         }
         coordinator?.present(fullScreenCover: .seeMore(config))
     }
-}
 
-extension BooksViewModel {
     func showDeleteAlert(for book: Book) {
         let config = AlertConfig(alertType: .delete,
                                  message: "You sure you want to delete this book?",
@@ -92,11 +98,12 @@ extension BooksViewModel {
         coordinator?.present(sheet: .new(categories,
                                          { [weak self] book in
             if self?.booksObj == nil {
-                self?.booksObj = .init(total: 0, items: [book])
+                self?.booksObj = .init(total: 1, items: [book])
                 self?.viewState = .info
             } else {
                 self?.booksObj?.items.insert(book, at: 0)
                 self?.booksObj?.total = (self?.booksObj?.total ?? 0) + 1
+                self?.viewState = .info
             }
         }))
     }

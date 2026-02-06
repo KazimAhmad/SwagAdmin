@@ -122,7 +122,7 @@ struct MoviesView: View {
                                 viewModel.showMore(of: movie)
                             }
                             .onLongPressGesture {
-                                viewModel.delete(movie: movie)
+                                viewModel.showDeleteAlert(for: movie)
                             }
                     }
                     if viewModel.hasMoreMovies() {

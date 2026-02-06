@@ -122,7 +122,7 @@ struct BooksView: View {
                                 viewModel.showMore(of: book)
                             }
                             .onLongPressGesture {
-                                viewModel.delete(book: book)
+                                viewModel.showDeleteAlert(for: book)
                             }
                     }
                     if viewModel.hasMoreBooks() {

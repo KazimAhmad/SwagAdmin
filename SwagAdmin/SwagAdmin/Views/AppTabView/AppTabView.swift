@@ -77,7 +77,7 @@ struct AppTabView: View {
                 .tag(AppTab.home)
         case .videos:
             NavigationStack {
-                Text(tab.title)
+                VideosView(viewModel: VideosViewModel())
             }
             .tag(AppTab.videos)
         case .recommendations:

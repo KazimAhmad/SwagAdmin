@@ -37,4 +37,5 @@ enum Images {
     
     static let questionMark = "questionmark.circle"
     static let lightBulb = "lightbulb.circle"
+    static let calender = "calendar.circle"
 }

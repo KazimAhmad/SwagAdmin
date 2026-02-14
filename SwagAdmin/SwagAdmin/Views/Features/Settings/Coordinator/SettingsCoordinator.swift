@@ -45,6 +45,11 @@ class SettingsCoordinator: CoordinatorProtocol {
                                                           didPublish: callBackPublish,
                                                           didSaveDraft: callBackDrafts,
                                                           existingThought: existingThought))
+        case .newCard(let card, let callback):
+            CardView(card: card, isEditing: true, didSave: {[weak self] addedCard in
+                self?.dismissSheet()
+                callback?(addedCard)
+            })
         }
     }
     

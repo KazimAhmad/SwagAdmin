@@ -19,6 +19,9 @@ struct SettingsView: View {
             headerView()
             draftsView()
         }
+        .task {
+            viewModel.getCards()
+        }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -53,9 +56,30 @@ struct SettingsView: View {
                         viewModel.navigate(to: section)
                     }
                 }
+                HStack {
+                    Spacer()
+                    Button {
+                        viewModel.addNewCard()
+                    } label: {
+                        Image(systemName: Images.plus)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                    }
+                }
+                cardsView()
             } header: {
                 Text("Drafts")
                     .font(AppTypography.title(size: 18))
+            }
+        }
+    }
+    
+    func cardsView() -> some View {
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(viewModel.cards, id: \.id) { card in
+                    CardView(card: card)
+                }
             }
         }
     }

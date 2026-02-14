@@ -110,10 +110,10 @@ struct MoviesView: View {
                 LoadingView()
             case .error:
                 AlertView()
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Color.primary)
             case .empty:
                 AlertView(config: AlertConfig.init(alertType: .empty))
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Color.primary)
             case .info:
                 LazyVGrid(columns: [GridItem.init(.flexible()), GridItem.init(.flexible())]) {
                     ForEach(viewModel.movies(), id: \.id) { movie in

@@ -43,7 +43,7 @@ struct VideosView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
         }
-        .frame(height: 200)
+        .frame(height: 240)
         .padding(.horizontal)
         .padding(.bottom, 32)
         .task {

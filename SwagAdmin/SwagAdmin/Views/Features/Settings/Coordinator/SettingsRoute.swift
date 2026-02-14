@@ -14,11 +14,14 @@ enum SettingsRoute: Hashable {
 
 enum SettingsSheet: Identifiable {
     case newThought(Thought, ((Thought) -> Void)?, ((Thought) -> Void)?)
+    case newCard(Card, ((Card) -> Void)?)
     
     var id: String {
         switch self {
         case .newThought:
             return "newThought"
+        case .newCard:
+            return "newCard"
         }
     }
 }

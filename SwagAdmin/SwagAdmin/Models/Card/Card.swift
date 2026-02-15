@@ -24,10 +24,8 @@ struct Card: Codable {
         case description
         case image
         case link
+        case colors
         case textColor = "color_text"
-        
-        case colorPrimary = "color_primary"
-        case colorSecondary = "color_secondary"
     }
     
     init(from decoder: any Decoder) throws {
@@ -37,10 +35,8 @@ struct Card: Codable {
         self.description = try container.decode(String.self, forKey: .description)
         self.image = try container.decode(String.self, forKey: .image)
         self.link = try container.decode(String.self, forKey: .link)
-        let colorPrimary = try container.decodeIfPresent(String.self, forKey: .colorPrimary) ?? ""
-        let colorSecondary = try container.decodeIfPresent(String.self, forKey: .colorSecondary) ?? ""
 
-        self.colors = [colorPrimary, colorSecondary]
+        self.colors = try container.decode([String].self, forKey: .colors)
         self.textColor = try container.decodeIfPresent(String.self, forKey: .textColor)
         self.photoItem = nil
     }
@@ -55,23 +51,7 @@ struct Card: Codable {
         self.textColor = textColor
         self.photoItem = nil
     }
-    
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.id, forKey: .id)
-        try container.encode(self.title, forKey: .title)
-        try container.encode(self.description, forKey: .description)
-        try container.encode(self.image, forKey: .image)
-        try container.encode(self.link, forKey: .link)
-        try container.encodeIfPresent(self.textColor, forKey: .textColor)
-
-        let primary_color = self.colors.first ?? ColorPickerHex.accent.rawValue
-        let secondary_color = self.colors.last ?? ColorPickerHex.secondary.rawValue
         
-        try container.encode(primary_color, forKey: .colorPrimary)
-        try container.encode(secondary_color, forKey: .colorSecondary)
-    }
-    
     func getDicts() -> [String: Any?] {
         [
             "id": self.id,

@@ -21,7 +21,7 @@ enum AppTab: String, Hashable, CaseIterable {
         case .videos:
             return "Videos"
         case .recommendations:
-            return "Recommendations"
+            return "Recs"
         case .funFacts:
             return "Fun Facts"
         case .settings:
@@ -50,7 +50,8 @@ struct AppTabView: View {
     var homeCoordinator = HomeCoordinator()
     var funfactsCoordinator = FactCoordinator()
     var settingsCoordinator = SettingsCoordinator()
-    
+    var videosCoordinator = VideosCoordinator()
+
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Pompiere-Regular", size: 32)!]
         UINavigationBar.appearance().titleTextAttributes = [.font: UIFont(name: "Pompiere-Regular", size: 24)!]
@@ -76,10 +77,8 @@ struct AppTabView: View {
             homeCoordinator.coordinatorView
                 .tag(AppTab.home)
         case .videos:
-            NavigationStack {
-                VideosView(viewModel: VideosViewModel())
-            }
-            .tag(AppTab.videos)
+            videosCoordinator.coordinatorView
+                .tag(AppTab.videos)
         case .recommendations:
             RecommendationView(viewModel: RecommendationViewModel())
                 .tag(AppTab.recommendations)

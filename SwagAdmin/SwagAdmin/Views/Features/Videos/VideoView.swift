@@ -58,12 +58,12 @@ struct VideoView: View {
         .padding(.horizontal)
         .padding(.top)
         .onTapGesture {
-            if let url = URL(string: video.url) {
+            if let url = URL(string: video.link) {
                 UIApplication.shared.open(url)
             }
         }
         .task {
-            viewModel.loadImage(url: video.url)
+            viewModel.loadImage(url: video.link)
         }
     }
 }
@@ -72,6 +72,6 @@ struct VideoView: View {
     VideoView(video: Video(id: 1,
                            title: "Saudi Arabia Walking Tales - Riyadh Night Life #33 | Junaid Akram",
                            description: "asjdfkajsf kjsabdfkjasdfnkasjbk fbkjasbdf ksadfioasfk jasdhf kjasdhfiukajhsdfkhkjadshf iasjdkhf jasdhfuahfnciuaknjhfiaueywr8oqiuawshdhfashfcnjaskdhfc iashfc as jdfhiasdjkhf caskfjhdhfasjkhf",
-                           url: "https://www.youtube.com/watch?v=j4VZJ2ZFzJs",
+                           link: "https://www.youtube.com/watch?v=j4VZJ2ZFzJs",
                            date: Date()))
 }

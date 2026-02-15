@@ -14,6 +14,17 @@ struct VideosView: View {
         ZStack {
             VStack {
                 headerView()
+                HStack {
+                    Spacer()
+                    Button {
+                        viewModel.addNewVideo()
+                    } label: {
+                        Image(systemName: Images.plus)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .padding(.horizontal)
+                    }
+                }
                 ScrollView {
                     infoView()
                 }
@@ -47,12 +58,14 @@ struct VideosView: View {
         .padding(.horizontal)
         .padding(.bottom, 32)
         .task {
-            viewModel.getVideos()
+            if viewModel.videos().count == 0 {
+                viewModel.getVideos()
+            }
         }
     }
     
     func infoView() -> some View {
-        LazyVStack {
+        VStack {
             switch viewModel.viewState {
             case .loading:
                 LoadingView()
@@ -68,12 +81,15 @@ struct VideosView: View {
     }
     
     func allVideosView() -> some View {
-        ForEach(viewModel.videos, id: \.id) { video in
+        ForEach(viewModel.videos(), id: \.id) { video in
             VideoView(video: video)
+                .onLongPressGesture {
+                    viewModel.delete(video)
+                }
         }
     }
 }
 
 #Preview {
-    VideosView(viewModel: VideosViewModel())
+    VideosView(viewModel: VideosViewModel(coordinator: nil))
 }

@@ -232,7 +232,7 @@ struct CardView: View {
 
             Spacer()
             Button {
-                didSave?(card)
+                addCard()
             } label: {
                 Text("Save")
             }
@@ -252,6 +252,20 @@ struct CardView: View {
                 } catch {
                     print("Failed to load image data: \(error)")
                 }
+            }
+        }
+    }
+    
+    @MainActor
+    private func addCard() {
+        let repository: CardRepository = CardRepository()
+        Task {
+            do {
+                let id = try await repository.create(object: card)
+                card.id = id
+                didSave?(card)
+            } catch {
+                print(error)
             }
         }
     }

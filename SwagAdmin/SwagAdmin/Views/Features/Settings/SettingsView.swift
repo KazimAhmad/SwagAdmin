@@ -78,7 +78,17 @@ struct SettingsView: View {
         ScrollView(.horizontal) {
             HStack {
                 ForEach(viewModel.cards, id: \.id) { card in
-                    CardView(card: card)
+                    VStack {
+                        CardView(card: card)
+                            .frame(width: 350)
+                        Button {
+                            viewModel.delete(card)
+                        } label: {
+                            Image(systemName: Images.delete)
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+                    }
                 }
             }
         }

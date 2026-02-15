@@ -24,11 +24,10 @@ struct Card: Codable {
         case description
         case image
         case link
-        case colors
-        case textColor
+        case textColor = "color_text"
         
-        case primary_color
-        case secondary_color
+        case colorPrimary = "color_primary"
+        case colorSecondary = "color_secondary"
     }
     
     init(from decoder: any Decoder) throws {
@@ -38,7 +37,10 @@ struct Card: Codable {
         self.description = try container.decode(String.self, forKey: .description)
         self.image = try container.decode(String.self, forKey: .image)
         self.link = try container.decode(String.self, forKey: .link)
-        self.colors = try container.decode([String].self, forKey: .colors)
+        let colorPrimary = try container.decodeIfPresent(String.self, forKey: .colorPrimary) ?? ""
+        let colorSecondary = try container.decodeIfPresent(String.self, forKey: .colorSecondary) ?? ""
+
+        self.colors = [colorPrimary, colorSecondary]
         self.textColor = try container.decodeIfPresent(String.self, forKey: .textColor)
         self.photoItem = nil
     }
@@ -66,8 +68,21 @@ struct Card: Codable {
         let primary_color = self.colors.first ?? ColorPickerHex.accent.rawValue
         let secondary_color = self.colors.last ?? ColorPickerHex.secondary.rawValue
         
-        try container.encode(primary_color, forKey: .primary_color)
-        try container.encode(secondary_color, forKey: .secondary_color)
+        try container.encode(primary_color, forKey: .colorPrimary)
+        try container.encode(secondary_color, forKey: .colorSecondary)
+    }
+    
+    func getDicts() -> [String: Any?] {
+        [
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "image": self.photoItem?.pngData(),
+            "link": self.link,
+            "color_primary": self.colors.first ?? "",
+            "color_secondary": self.colors.last ?? "",
+            "color_text": self.textColor ?? ""
+        ]
     }
 }
 

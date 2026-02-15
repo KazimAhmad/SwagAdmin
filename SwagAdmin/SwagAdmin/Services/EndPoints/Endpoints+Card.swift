@@ -47,8 +47,8 @@ enum CardEndpoint: Endpoint {
         switch self {
         case .delete(let ids):
             return HTTPBody.json(["ids": ids])
-        case .add(let video):
-            return HTTPBody.json(video)
+        case .add(let card):
+            return HTTPBody.multiFormData(card.getDicts())
         default:
             return nil
         }

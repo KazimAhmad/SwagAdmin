@@ -9,7 +9,7 @@ import Foundation
 
 final class CardRepository {
     
-    func fetch(for page: Int) async throws -> Cards {
+    func fetch() async throws -> Cards {
         let cardsEndpoint = CardEndpoint.list
         return try await SwiftServices.shared.request(endpoint: cardsEndpoint)
     }

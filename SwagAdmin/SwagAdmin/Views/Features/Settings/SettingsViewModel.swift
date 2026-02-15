@@ -17,7 +17,9 @@ class SettingsViewModel: ObservableObject {
     private weak var coordinator: SettingsCoordinator?
     
     var sections: [SettingsSection] = SettingsSection.allCases
-    @Published var cards: [Card] = []
+    
+    @Published var cards: Cards = []
+    var repository: CardRepository = CardRepository()
     
     init(coordinator: SettingsCoordinator? = nil) {
         self.coordinator = coordinator
@@ -44,15 +46,24 @@ class SettingsViewModel: ObservableObject {
     @MainActor
     func getCards() {
         if cards.count > 0 { return }
-        
-        for i in 0...2 {
-            cards.append(Card(id: i,
-                              title: "New Card \(i)",
-                              description: "new card description \(i)",
-                              image: "",
-                              link: "",
-                              colors: [],
-                              textColor: ""))
+        Task {
+            do {
+                cards = try await repository.fetch()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    @MainActor
+    func delete(_ card: Card) {
+        Task {
+            do {
+                try await repository.delete(for: [card.id])
+                cards.removeAll(where: { $0.id == card.id })
+            } catch {
+                print(error)
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ import Foundation
 
 enum HTTPBody {
     case json(Encodable)
-    //MARK: -this exercise only needs the json type but i am including the form and multiform types as well
     case formData([String: String?])
     case multiFormData([String: Any?])
     

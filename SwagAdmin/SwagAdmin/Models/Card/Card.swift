@@ -26,6 +26,9 @@ struct Card: Codable {
         case link
         case colors
         case textColor
+        
+        case primary_color
+        case secondary_color
     }
     
     init(from decoder: any Decoder) throws {
@@ -50,4 +53,22 @@ struct Card: Codable {
         self.textColor = textColor
         self.photoItem = nil
     }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.description, forKey: .description)
+        try container.encode(self.image, forKey: .image)
+        try container.encode(self.link, forKey: .link)
+        try container.encodeIfPresent(self.textColor, forKey: .textColor)
+
+        let primary_color = self.colors.first ?? ColorPickerHex.accent.rawValue
+        let secondary_color = self.colors.last ?? ColorPickerHex.secondary.rawValue
+        
+        try container.encode(primary_color, forKey: .primary_color)
+        try container.encode(secondary_color, forKey: .secondary_color)
+    }
 }
+
+typealias Cards = [Card]

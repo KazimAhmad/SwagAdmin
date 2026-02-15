@@ -66,7 +66,7 @@ struct CardView: View {
         ZStack {
             VStack {
                 HStack {
-                    imageView()
+                    ringsView(on: imageView())
                     Spacer()
                 }
                 Text(card.description)
@@ -125,116 +125,42 @@ struct CardView: View {
     
     private func imageView() -> some View {
         VStack {
-            let paddingBetweenOverlays = 6.0
-            let strokeColor = Color.init(hex: card.colors.first ?? ColorPickerHex.accent.rawValue) ?? .accentColor
             if let url = URL(string: card.image) {
                 AsyncImage(url: url) { image in
                     image
                         .resizable()
                         .frame(width: 100, height: 100)
                         .clipShape(Circle())
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                                .stroke(strokeColor, lineWidth: 4)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 3)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 2)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 1)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                                .stroke(strokeColor, lineWidth: 0.5)
-                        }
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.circular)
                         .tint(Color.accentColor)
+                        .frame(width: 100, height: 100)
                 }
             } else if let pickedImage = card.photoItem {
                     Image(uiImage: pickedImage)
                         .resizable()
                         .frame(width: 100, height: 100)
                         .clipShape(Circle())
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                                .stroke(strokeColor, lineWidth: 4)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 3)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 2)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                            .stroke(strokeColor, lineWidth: 1)
-                        }
-                        .padding(paddingBetweenOverlays)
-                        .overlay {
-                            Circle()
-                                .stroke(strokeColor, lineWidth: 0.5)
-                        }
-            } else {
-                Circle()
-                    .frame(width: 100, height: 100)
-                    .padding(paddingBetweenOverlays)
-                    .clipShape(Circle())
-                    .overlay {
-                        Circle()
-                            .stroke(strokeColor, lineWidth: 4)
-                    }
-                    .padding(paddingBetweenOverlays)
-                    .overlay {
-                        Circle()
-                        .stroke(strokeColor, lineWidth: 3)
-                    }
-                    .padding(paddingBetweenOverlays)
-                    .overlay {
-                        Circle()
-                        .stroke(strokeColor, lineWidth: 2)
-                    }
-                    .padding(paddingBetweenOverlays)
-                    .overlay {
-                        Circle()
-                        .stroke(strokeColor, lineWidth: 1)
-                    }
-                    .padding(paddingBetweenOverlays)
-                    .overlay {
-                        Circle()
-                            .stroke(strokeColor, lineWidth: 0.5)
-                    }
             }
         }
     }
     
-    private func ringsView(on view: AnyView) -> some View {
+    private func ringsView(on view: some View) -> some View {
         ZStack {
-            Circle()
-                .stroke(lineWidth: 10)
-                .opacity(0.3)
-            Circle()
-                .stroke(lineWidth: 10)
+            let strokeColor = Color.init(hex: card.colors.first ?? ColorPickerHex.accent.rawValue) ?? .accentColor
+            let size = 108.0
+            let lineLength: CGFloat = 4.5
+            ForEach((0...4), id: \.self) { index in
+                let itemSize = size + (Double(index) * 13.0)
+                let itemLineLength: CGFloat = lineLength - Double(index)
+                Circle()
+                    .stroke(strokeColor, lineWidth: itemLineLength)
+                    .frame(width: itemSize, height: itemSize)
+            }
+            view
+                .padding(8)
         }
-        
     }
     
     private func sideTitleView() -> some View {
@@ -324,7 +250,6 @@ struct CardView: View {
                         card.photoItem = inputImage
                     }
                 } catch {
-                    // Handle the error if needed (e.g., log or show an alert)
                     print("Failed to load image data: \(error)")
                 }
             }
